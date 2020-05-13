@@ -20,14 +20,6 @@ class Warehouse extends Model {
                     to: 'tSite.nSiteID',
                 },
             },
-            user: {
-                relation: Model.HasManyRelation,
-                modelClass: `${__dirname}/tUser.js`,
-                join: {
-                    from: 'tWarehouse.nWarehouseID',
-                    to: 'tUser.nWarehouseID',
-                },
-            },
             shipmentItem: {
                 relation: Model.HasManyRelation,
                 modelClass: `${__dirname}/ShipmentItem.js`,
@@ -35,7 +27,7 @@ class Warehouse extends Model {
                     from: 'tWarehouse.nWarehouseID',
                     to: 'tShipmentItem.nWarehouseID',
                 },
-            },
+            }
         };
     }
 }

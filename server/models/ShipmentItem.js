@@ -20,14 +20,6 @@ class ShipmentItem extends Model {
                     to: 'tShipmentJob.nShipmentJobID',
                 },
             },
-            chemical: {
-                relation: Model.HasOneRelation,
-                modelClass: `${__dirname}/Chemical.js`,
-                join: {
-                    from: 'tShipmentItem.nChemicalID',
-                    to: 'tChemical.nChemicalID',
-                },
-            },
             warehouse: {
                 relation: Model.HasOneRelation,
                 modelClass: `${__dirname}/Warehouse.js`,
