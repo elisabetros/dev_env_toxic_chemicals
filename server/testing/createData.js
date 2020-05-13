@@ -43,11 +43,12 @@ let ticket6 = new Ticket('incoming', {'A':5, 'C':7})
 let aWarehouses = []
 let aWarehouses1 = []
 
+
 const fetchWarehouses = async () => {
     const response = await axios('http://localhost/warehouses')
     const warehouses = response.data
     // console.log(warehouses)
-    warehouses.forEach((warehouse, index) => {
+    warehouses.forEach(warehouse => {
         if(warehouse.nWarehouseID <= 5){
             aWarehouses.push(new Warehouse(warehouse.nWarehouseID, warehouse.nCapacity))
         }else{
@@ -55,9 +56,39 @@ const fetchWarehouses = async () => {
         }
        
     })
-    console.log(aWarehouses)
+    // aWarehouses = ['A', 'B']
+    // console.log(aWarehouses)
 }
-console.log(aWarehouses)
+const assignWarehouses = async () =>{
+    await fetchWarehouses()
+    site1.warehouses= aWarehouses
+    site2.warehouses= aWarehouses1
+    await fetchWarehouseStock(site1)
+    await fetchWarehouseStock(site2)
+    await createTickets()
+    // console.log(site1)
 
-const x = fetchWarehouses()
-console.log(x)
+}
+assignWarehouses()
+
+const fetchWarehouseStock = async (site) => {
+    await site.warehouses.forEach(async (warehouse) => {
+        const response = await axios(`http://localhost/currentstock/${warehouse.id}`)
+      
+            let stockArray = []
+            await response.data.map(stock => {
+                temp ={}
+                temp[stock.sChemicalName] = stock.nStock
+                stockArray.push(temp)
+            })
+            warehouse.chemicalInventory = stockArray  
+       })
+}
+
+const createTickets = async () => {
+    // const ticket = new Ticket({})
+    site1.processTicket(ticket1)
+    site1.processTicket(ticket2)
+    console.log(site1)
+}
+
