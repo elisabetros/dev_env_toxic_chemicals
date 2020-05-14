@@ -1,7 +1,7 @@
 exports.seed = function (knex) {
-  return knex("tShipmentItem").del()
+  return knex("tJobItem").del()
     .then(() => {
-      return knex("tShipmentJob").del();
+      return knex("tJob").del();
     })
     .then(() => {
       return knex("tChemicalStock").del();

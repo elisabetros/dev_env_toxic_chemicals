@@ -3,7 +3,6 @@ const Warehouse = require('./warehouse')
 const Ticket = require('./ticket')
 const Job = require('./job')
 
-
 const axios = require('axios')
 // 10, 12, 5, 3, 9
 
@@ -11,7 +10,7 @@ const axios = require('axios')
 let site1 = new Site(1)
 let site2 = new Site(2)
 
-let ticket1 = new Ticket('incoming', {'A': 5, 'C':2})
+let ticket1 = new Ticket('incoming', {'A': 1, 'C':2})
 let ticket2 = new Ticket('incoming', {'B': 7, 'C':3})
 let ticket3 = new Ticket('incoming', {'C':7})
 let ticket4 = new Ticket('outgoing', {'C':7})
@@ -46,49 +45,91 @@ let aWarehouses1 = []
 
 const fetchWarehouses = async () => {
     const response = await axios('http://localhost/warehouses')
-    const warehouses = response.data
+    const warehouses = await response.data
     // console.log(warehouses)
     warehouses.forEach(warehouse => {
         if(warehouse.nWarehouseID <= 5){
             aWarehouses.push(new Warehouse(warehouse.nWarehouseID, warehouse.nCapacity))
         }else{
             aWarehouses1.push(new Warehouse(warehouse.nWarehouseID, warehouse.nCapacity))
-        }
-       
+        }       
     })
-    // aWarehouses = ['A', 'B']
-    // console.log(aWarehouses)
-}
-const assignWarehouses = async () =>{
-    await fetchWarehouses()
     site1.warehouses= aWarehouses
     site2.warehouses= aWarehouses1
-    await fetchWarehouseStock(site1)
-    await fetchWarehouseStock(site2)
-    await createTickets()
-    // console.log(site1)
+}
 
+
+const assignWarehouses = async () =>{
+    await fetchWarehouses()
+    // fill warehouses with chemicals
+    for await (warehouse of site1.warehouses){
+        warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
+    }
+    for await (warehouse of site2.warehouses){
+        warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
+    }
+    // process ticket 
+    let job = site1.processTicket(ticket4)
+    console.log(job)
+    if(job.status === 'inProcess'){ 
+        for await (warehouse of site1.warehouses){
+            warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
+        }
+        for await (warehouse of site2.warehouses){
+            warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
+        }
+            console.log(site1)
+         if(sendJobToWarehouses(site1, job)){
+        //     //  TODO: send job, and updated warehouses to db
+            const response = await axios.post('http://localhost/processJob', {job})
+            console.log(response)
+            // console.log('yes')
+         }else{
+            // console.log(job denied) 
+         }
+    }
+    
 }
 assignWarehouses()
 
-const fetchWarehouseStock = async (site) => {
-    await site.warehouses.forEach(async (warehouse) => {
-        const response = await axios(`http://localhost/currentstock/${warehouse.id}`)
-      
-            let stockArray = []
-            await response.data.map(stock => {
+const fetchWarehouseStock = async (id) => {
+        const response = await axios(`http://localhost/currentstock/${id}`)
+        const warehouseStock = await response.data
+        let stockObj = {}
+        warehouseStock.map(stock => {
                 temp ={}
-                temp[stock.sChemicalName] = stock.nStock
-                stockArray.push(temp)
+                temp[stock.cChemicalName] = stock.nStock
+                stockObj = {...temp, ...stockObj}
+                return temp
             })
-            warehouse.chemicalInventory = stockArray  
-       })
+           
+            return stockObj
 }
 
-const createTickets = async () => {
-    // const ticket = new Ticket({})
-    site1.processTicket(ticket1)
-    site1.processTicket(ticket2)
-    console.log(site1)
+
+const sendJobToWarehouses = async (site, job) => {
+    job.placementArray.map( (placement, index) =>{
+        const key =   Object.keys(placement)
+        // console.log(placement.warehouse)
+        site.warehouses.find((warehouse, index) => {
+            if(warehouse.id === placement.warehouse){
+            console.log(warehouse.id)
+            return warehouse.checkIfSpaceForChemicals(job)
+            }else{
+                return false;
+            }
+        })
+    })
 }
 
+
+
+
+
+/* first I need to fetch warehouse to save into the site classes
+then I need to fill those warehouses with inventory
+then I need to make a ticket
+    process ticket
+    if it is approved, it becomes a job
+    then I have to revert the warehouses to original state from fetching
+    */ 
