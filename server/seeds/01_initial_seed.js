@@ -1,201 +1,148 @@
 exports.seed = function (knex) {
-  return knex('tSite').insert([{
-        cSiteName: "S1"
+  return knex("warehouse")
+    .insert([
+      {
+        id: 1,
+        capacity: 10,
+        current_stock: 3,
       },
       {
-        cSiteName: "S2"
+        id: 2,
+        capacity: 12,
+        current_stock: 6,
+      },
+      {
+        id: 3,
+        capacity: 5,
+        current_stock: 1,
+      },
+      {
+        id: 4,
+        capacity: 3,
+        current_stock: 4,
+      },
+      {
+        id: 5,
+        capacity: 9,
+        current_stock: 3,
+      },
+      {
+        id: 6,
+        capacity: 10,
+        current_stock: 6,
+      },
+      {
+        id: 7,
+        capacity: 12,
+        current_stock: 1,
+      },
+      {
+        id: 8,
+        capacity: 5,
+        current_stock: 4,
+      },
+      {
+        id: 9,
+        capacity: 3,
+        current_stock: 3,
+      },
+      {
+        id: 10,
+        capacity: 9,
+        current_stock: 6,
       },
     ])
-    .then(async () => {
-      global.siteIDs = await knex.select("nSiteID").from("tSite");
-      siteIDs.sort(function (a, b) {
-        return a.nSiteID - b.nSiteID;
-      });
-
-      return knex('tWarehouse').insert([{
-          cWarehouseName: "W1",
-          nCapacity: 10,
-          nCurrentStock: 10,
-          nSiteID: siteIDs[0].nSiteID,
+    // .then(() => {
+    //   return knex("job").insert([
+    //     {
+    //       type: "I",
+    //       site_id: 1,
+    //     },
+    //     {
+    //       type: "O",
+    //       site_id: 2,
+    //     },
+    //     {
+    //       type: "I",
+    //       site_id: 2,
+    //     },
+    //     {
+    //       type: "O",
+    //       site_id: 1,
+    //     },
+    //     {
+    //       type: "O",
+    //       site_id: 2,
+    //     },
+    //     {
+    //       type: "I",
+    //       site_id: 2,
+    //     },
+    //   ]);
+    // })
+    .then(() => {
+      return knex("warehouseitem").insert([
+        {
+          chemical: "A",
+          amount: 1,
+          warehouse_id: 2,
         },
         {
-          cWarehouseName: "W2",
-          nCapacity: 12,
-          nCurrentStock: 9,
-          nSiteID: siteIDs[0].nSiteID,
+          chemical: "B",
+          amount: 5,
+          warehouse_id: 7,
         },
         {
-          cWarehouseName: "W3",
-          nCapacity: 5,
-          nCurrentStock: 2,
-          nSiteID: siteIDs[0].nSiteID,
+          chemical: "C",
+          amount: 1,
+          warehouse_id: 1,
         },
         {
-          cWarehouseName: "W4",
-          nCapacity: 3,
-          nCurrentStock: 3,
-          nSiteID: siteIDs[0].nSiteID,
-        },
-        {
-          cWarehouseName: "W5",
-          nCapacity: 9,
-          nCurrentStock: 9,
-          nSiteID: siteIDs[0].nSiteID,
-        },
-        {
-          cWarehouseName: "W11",
-          nCapacity: 10,
-          nCurrentStock: 8,
-          nSiteID: siteIDs[1].nSiteID,
-        },
-        {
-          cWarehouseName: "W12",
-          nCapacity: 12,
-          nCurrentStock: 12,
-          nSiteID: siteIDs[1].nSiteID,
-        },
-        {
-          cWarehouseName: "W13",
-          nCapacity: 5,
-          nCurrentStock: 5,
-          nSiteID: siteIDs[1].nSiteID,
-        },
-        {
-          cWarehouseName: "W14",
-          nCapacity: 3,
-          nCurrentStock: 2,
-          nSiteID: siteIDs[1].nSiteID,
-        },
-        {
-          cWarehouseName: "W15",
-          nCapacity: 9,
-          nCurrentStock: 1,
-          nSiteID: siteIDs[1].nSiteID,
+          chemical: "A",
+          amount: 2,
+          warehouse_id: 9,
         },
       ]);
     })
-    .then(async () => {
-      global.warehouseIDs = await knex.select("nWarehouseID").from("tWarehouse");
-      warehouseIDs.sort(function (a, b) {
-        return a.nWarehouseID - b.nWarehouseID;
-      });
-
-      return knex('tChemicalStock').insert([{
-          nWarehouseID: warehouseIDs[0].nWarehouseID,
-          cChemicalName: 'A',
-          nStock: 5 // Max cap. is 10
+    .then(() => {
+      return knex("audit").insert([
+        {
+          type: "I",
+          chemical: "A",
+          warehouse_id: 2,
+          site_id: 1,
+          amount: 1,
         },
         {
-          nWarehouseID: warehouseIDs[0].nWarehouseID,
-          cChemicalName: 'C',
-          nStock: 5
+          type: "O",
+          chemical: "B",
+          warehouse_id: 3,
+          site_id: 1,
+          amount: 5,
         },
         {
-          nWarehouseID: warehouseIDs[1].nWarehouseID,
-          cChemicalName: 'B',
-          nStock: 9 // Max cap. is 12
+          type: "I",
+          chemical: "C",
+          warehouse_id: 6,
+          site_id: 2,
+          amount: 6,
         },
         {
-          nWarehouseID: warehouseIDs[2].nWarehouseID,
-          cChemicalName: 'C',
-          nStock: 2 // Max cap. is 5
-        },
-        {
-          nWarehouseID: warehouseIDs[3].nWarehouseID,
-          cChemicalName: 'A',
-          nStock: 3 // Max cap. is 3
-        },
-        {
-          nWarehouseID: warehouseIDs[4].nWarehouseID,
-          cChemicalName: 'B',
-          nStock: 9 // Max cap is 9
-        },
-        {
-          nWarehouseID: warehouseIDs[5].nWarehouseID,
-          cChemicalName: 'B',
-          nStock: 8 // Max cap. is 10
-        },
-        {
-          nWarehouseID: warehouseIDs[6].nWarehouseID,
-          cChemicalName: 'B',
-          nStock: 3 // Max cap. is 12
-        },
-        {
-          nWarehouseID: warehouseIDs[6].nWarehouseID,
-          cChemicalName: 'C',
-          nStock: 9
-        },
-        {
-          nWarehouseID: warehouseIDs[7].nWarehouseID,
-          cChemicalName: 'A',
-          nStock: 5 // Max cap. is 5
-        },
-        {
-          nWarehouseID: warehouseIDs[8].nWarehouseID,
-          cChemicalName: 'C',
-          nStock: 2 // Max cap. is 3
-        },
-        {
-          nWarehouseID: warehouseIDs[9].nWarehouseID,
-          cChemicalName: 'A',
-          nStock: 1 // Max cap. is 9
+          type: "O",
+          chemical: "B",
+          warehouse_id: 4,
+          site_id: 1,
+          amount: 2,
         },
       ]);
     })
-     .then(async () => {
-      return knex('tJob').insert([{
-          cJobType: 'O'
-        },
+    .then(() => {
+      return knex("user").insert([
         {
-          cJobType: 'O'
-        },
-        {
-          cJobType: 'I'
-        },
-        {
-          cJobType: 'O'
-        },
-        {
-          cJobType: 'I'
+          email: "admin@chemicals.dk",
+          password:
+            "$2b$10$G/v/MRwgMgOAtCUCQRKJTO8GRD/rKxyu61J5wfYimsHd0/FSxuVAq",
         },
       ]);
-    })
-    .then(async () => {
-      global.JobIDs = await knex.select("nJobID").from("tJob");
-      JobIDs.sort(function (a, b) {
-        return a.nJobID - b.nJobID;
-      });
-
-      return knex("tJobItem").insert([{
-          nAmount: 4,
-          nJobID: JobIDs[0].nJobID,
-          cChemicalName:'C',
-          nWarehouseID: warehouseIDs[0].nWarehouseID
-        },
-        {
-          nAmount: 8,
-          nJobID: JobIDs[1].nJobID,
-          cChemicalName: 'A',
-          nWarehouseID: warehouseIDs[9].nWarehouseID,
-        },
-        {
-          nAmount: 6,
-          nJobID: JobIDs[2].nJobID,
-          cChemicalName: 'C',
-          nWarehouseID: warehouseIDs[9].nWarehouseID
-        },
-        {
-          nAmount: 7,
-          nJobID: JobIDs[3].nJobID,
-          cChemicalName: 'B',
-          nWarehouseID: warehouseIDs[6].nWarehouseID
-        },
-        {
-          nAmount: 3,
-          nJobID: JobIDs[4].nJobID,
-          cChemicalName: 'A',
-          nWarehouseID: warehouseIDs[2].nWarehouseID
-        },
-      ]);
-    })
+    });
 };

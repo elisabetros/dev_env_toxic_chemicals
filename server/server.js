@@ -24,7 +24,7 @@ Model.knex(knex)
 
 
 const Warehouse = require('./models/Warehouse')
-const ChemicalStock = require('./models/ChemicalStock')
+const WarehouseItem = require('./models/WarehouseItem')
 
 // ROUTES
 const warehouseRoute = require('./routes/warehouses')

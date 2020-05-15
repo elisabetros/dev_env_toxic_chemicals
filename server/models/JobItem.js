@@ -2,34 +2,34 @@ const {
     Model
 } = require("objection");
 
-class ShipmentItem extends Model {
+class JobItem extends Model {
     static get tableName() {
-        return "tShipmentItem";
+        return "jobItem";
     }
     static get idColumn() {
-        return "nShipmentItemID";
+        return "id";
     }
 
     static get relationMappings() {
         return {
-            shipmentJob: {
+            Job: {
                 relation: Model.HasOneRelation,
-                modelClass: `${__dirname}/ShipmentJob.js`,
+                modelClass: `${__dirname}/Job.js`,
                 join: {
-                    from: 'tShipmentItem.nShipmentJobID',
-                    to: 'tShipmentJob.nShipmentJobID',
+                    from: 'jobItem.job_id',
+                    to: 'job.id',
                 },
             },
             warehouse: {
                 relation: Model.HasOneRelation,
                 modelClass: `${__dirname}/Warehouse.js`,
                 join: {
-                    from: 'tShipmentItem.nWarehouseID',
-                    to: 'tWarehouse.nWarehouseID',
+                    from: 'jobItem.warehouse_id',
+                    to: 'warehouse.id',
                 },
             },
         };
     }
 }
 
-module.exports = ShipmentItem;
+module.exports = JobItem;

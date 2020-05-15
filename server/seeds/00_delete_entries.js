@@ -1,15 +1,19 @@
 exports.seed = function (knex) {
-  return knex("tJobItem").del()
+  return knex("warehouse")
+    .del()
     .then(() => {
-      return knex("tJob").del();
+      return knex("job").del();
     })
     .then(() => {
-      return knex("tChemicalStock").del();
+      return knex("jobItem").del();
     })
     .then(() => {
-      return knex("tWarehouse").del();
+      return knex("warehouseitem").del();
     })
     .then(() => {
-      return knex("tSite").del();
+      return knex("audit").del();
+    })
+    .then(() => {
+      return knex("user").del();
     });
 };

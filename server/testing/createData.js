@@ -48,10 +48,10 @@ const fetchWarehouses = async () => {
     const warehouses = await response.data
     // console.log(warehouses)
     warehouses.forEach(warehouse => {
-        if(warehouse.nWarehouseID <= 5){
-            aWarehouses.push(new Warehouse(warehouse.nWarehouseID, warehouse.nCapacity))
+        if(warehouse.id <= 5){
+            aWarehouses.push(new Warehouse(warehouse.id, warehouse.capacity))
         }else{
-            aWarehouses1.push(new Warehouse(warehouse.nWarehouseID, warehouse.nCapacity))
+            aWarehouses1.push(new Warehouse(warehouse.id, warehouse.capacity))
         }       
     })
     site1.warehouses= aWarehouses
@@ -69,7 +69,9 @@ const assignWarehouses = async () =>{
         warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
     }
     // process ticket 
-    let job = site1.processTicket(ticket4)
+    // let job = site2.processTicket(ticket5)
+    let job = site1.processTicket(ticket1)
+    // console.log(ticket4)
     console.log(job)
     if(job.status === 'inProcess'){ 
         for await (warehouse of site1.warehouses){
@@ -81,7 +83,7 @@ const assignWarehouses = async () =>{
             console.log(site1)
          if(sendJobToWarehouses(site1, job)){
         //     //  TODO: send job, and updated warehouses to db
-            const response = await axios.post('http://localhost/processJob', {job})
+            const response = await axios.post(`http://localhost/processJob`, {job})
             console.log(response)
             // console.log('yes')
          }else{
@@ -98,7 +100,7 @@ const fetchWarehouseStock = async (id) => {
         let stockObj = {}
         warehouseStock.map(stock => {
                 temp ={}
-                temp[stock.cChemicalName] = stock.nStock
+                temp[stock.chemical] = stock.amount
                 stockObj = {...temp, ...stockObj}
                 return temp
             })

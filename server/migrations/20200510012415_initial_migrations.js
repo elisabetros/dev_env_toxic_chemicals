@@ -1,56 +1,67 @@
 exports.up = function (knex) {
-    return knex.schema
-        .createTable('tSite', (table) => {
-            table.increments('nSiteID').primary().unsigned().notNullable();
-            table.string('cSiteName', 2).unique().notNullable();
-        })
-        .createTable('tWarehouse', (table) => {
-            table.increments('nWarehouseID').primary().unsigned().notNullable();
-            table.string('cWarehouseName', 3).notNullable();
-            table.integer('nCapacity').unsigned();
-            table.integer('nCurrentStock').unsigned();
-            table.integer('nSiteID').unsigned().notNullable();
-            table.foreign('nSiteID').references('nSiteID').inTable('tSite');
-        })
-        .createTable('tChemicalStock', (table) => {
-            table.increments('nChemicalStockID').primary().unsigned().notNullable();
-            table.integer('nWarehouseID').unsigned().notNullable();
-            table.foreign('nWarehouseID').references('nWarehouseID').inTable('tWarehouse');
-            table.string('cChemicalName', 2).notNullable();
-            table.integer('nStock').unsigned();
-            table.timestamps(true, true);
-        })
-        .createTable('tJob', (table) => {
-            table.bigIncrements('nJobID').primary().unsigned().notNullable();
-            table.string('cJobType', 1).notNullable();
-            table.timestamp('dDate').notNullable().defaultTo(knex.fn.now());
-        })
-        .createTable('tJobItem', table => {
-            table.bigIncrements('nJobItemID').primary().unsigned().notNullable();
-            table.integer('nAmount').unsigned().notNullable();
-            table.bigInteger('nJobID').unsigned().notNullable();
-            table.foreign('nJobID').references('nJobID').inTable('tJob');
-            table.string('cChemicalName').notNullable();
-            table.integer('nWarehouseID').unsigned().notNullable();
-            table.foreign('nWarehouseID').references('nWarehouseID').inTable('tWarehouse');
-        })
-        .createTable('tAuditChemicalMovement', (table) => {
-            table.increments('nAuditID').primary().unsigned().notNullable();
-            table.integer('nWarehouseID').unsigned().notNullable();
-            table.foreign('nWarehouseID').references('nWarehouseID').inTable('tWarehouse');
-            table.string('cChemicalName').notNullable()
-            table.string('nAmount')
-            table.string('sAction', 1).notNullable()
-
-        })
+  return knex.schema
+    .createTable("warehouse", (table) => {
+      table.integer("id").primary().unsigned().notNullable();
+      table.integer("capacity").unsigned();
+      table.integer("current_stock").unsigned();
+    })
+    .createTable("job", (table) => {
+      table.bigIncrements("id").primary().unsigned().notNullable();
+      table.string("type", 1).notNullable();
+      table.integer("site_id").unsigned().notNullable();
+      table.timestamp("date").notNullable().defaultTo(knex.fn.now());
+    })
+    .createTable('jobItem', (table) => {
+      table.bigIncrements("id").primary().unsigned().notNullable();
+      table.bigInteger("job_id").unsigned().notNullable();
+      table.string("chemical").notNullable();
+      table.integer("amount").unsigned();
+      table
+        .foreign("job_id")
+        .references("job.id")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
+        table.integer("warehouse_id").unsigned().notNullable();
+        table
+          .foreign("warehouse_id")
+          .references("warehouse.id")
+          .onDelete("CASCADE")
+          .onUpdate("CASCADE");
+      })
+    .createTable("warehouseitem", (table) => {
+      table.bigIncrements("id").primary().unsigned().notNullable();
+      table.string("chemical").notNullable();
+      table.integer("amount").unsigned();
+      table.integer("warehouse_id").unsigned().notNullable();
+      table
+        .foreign("warehouse_id")
+        .references("warehouse.id")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
+    })
+    .createTable("audit", (table) => {
+      table.increments("id").primary().unsigned().notNullable();
+      table.string("type", 1).notNullable();
+      table.string("chemical").notNullable();
+      table.integer("warehouse_id").unsigned().notNullable();
+      table.integer("site_id").unsigned().notNullable();
+      table.integer("amount").unsigned().notNullable();
+      table.timestamp("date").notNullable().defaultTo(knex.fn.now());
+    })
+    .createTable("user", (table) => {
+      table.increments("id").primary().unsigned().notNullable();
+      table.string("email").notNullable();
+      table.string("password").notNullable();
+      table.timestamp("created_at").notNullable().defaultTo(knex.fn.now());
+    });
 };
 
 exports.down = function (knex) {
-    return knex.schema
-        .dropTableIfExists('tJobItem')
-        .dropTableIfExists('tJob')
-        .dropTableIfExists('tChemicalStock')
-        .dropTableIfExists('tAuditChemicalStock')
-        .dropTableIfExists('tWarehouse')
-        .dropTableIfExists('tSite')
+  return knex.schema
+  .dropTableIfExists("audit")
+  .dropTableIfExists("user")
+  .dropTableIfExists("warehouseItem")
+  .dropTableIfExists("jobItem")
+  .dropTableIfExists("job")
+  .dropTableIfExists("warehouse")
 };
