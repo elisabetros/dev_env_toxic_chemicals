@@ -75,6 +75,8 @@ class Site {
             const warehouseToStore = aWarehousePlaceholders.find((warehouse, index) => {
                 const chemicalsAllowed= warehouse.getChemicalsinStorage().chemicalsAllowed
                 const remainingStorage = warehouse.getChemicalsinStorage().remainingStorage
+                console.log(chemicalsAllowed.includes(chemical))
+                console.log(chemicalsAllowed)
                 if (chemicalsAllowed.includes(chemical)){
                     if(chemical == 'A'){
                         let nextWarehouse = this.warehouses[index+1];

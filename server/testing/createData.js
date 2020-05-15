@@ -13,7 +13,7 @@ let site2 = new Site(2)
 let ticket1 = new Ticket('incoming', {'A': 1, 'C':2})
 let ticket2 = new Ticket('incoming', {'B': 7, 'C':3})
 let ticket3 = new Ticket('incoming', {'C':7})
-let ticket4 = new Ticket('outgoing', {'C':7})
+let ticket4 = new Ticket('outgoing', {'C':4})
 let ticket5 = new Ticket('outgoing', {'A':2})
 let ticket6 = new Ticket('incoming', {'A':5, 'C':7})
 
@@ -68,9 +68,19 @@ const assignWarehouses = async () =>{
     for await (warehouse of site2.warehouses){
         warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
     }
-    // process ticket 
+    // ---> RUN THESE ONE AT A TIME TO FILL DB
     // let job = site2.processTicket(ticket5)
-    let job = site1.processTicket(ticket1)
+    // let job = site1.processTicket(ticket1)
+    // let job = site1.processTicket(ticket2)
+    // let job = site1.processTicket(ticket3)
+    // let job = site1.processTicket(ticket4)
+    // let job = site1.processTicket(ticket5)
+    let job = site1.processTicket(ticket6)
+    // let job = site2.processTicket(ticket2)
+    // let job = site2.processTicket(ticket3)
+    // let job = site2.processTicket(ticket4)
+    // let job = site2.processTicket(ticket5)
+    // let job = site2.processTicket(ticket6)
     // console.log(ticket4)
     console.log(job)
     if(job.status === 'inProcess'){ 
