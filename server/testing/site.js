@@ -34,9 +34,6 @@ class Site {
       
   }
     processTicket(ticket){
-        let InitialWarehouseState = this.warehouses
-        
-        console.log(InitialWarehouseState)
         if(ticket.type === 'incoming'){
 
             console.log('incoming')
@@ -69,14 +66,14 @@ class Site {
 
     placeIndividualChemicalTypes(amount, chemical, ticket) {
         let aWarehousesToStore = []
-        let aWarehousePlaceholders = this.warehouses
         for(let i = 0; i< amount; i++){
 
-            const warehouseToStore = aWarehousePlaceholders.find((warehouse, index) => {
+            const warehouseToStore = this.warehouses.find((warehouse, index) => {
+                // console.log('os', warehouse.chemicalInventory)
                 const chemicalsAllowed= warehouse.getChemicalsinStorage().chemicalsAllowed
                 const remainingStorage = warehouse.getChemicalsinStorage().remainingStorage
-                console.log(chemicalsAllowed.includes(chemical))
-                console.log(chemicalsAllowed)
+                // console.log(warehouse.getChemicalsinStorage().chemicalsAllowed)
+                // console.log(warehouse.chemicalInventory)
                 if (chemicalsAllowed.includes(chemical)){
                     if(chemical == 'A'){
                         let nextWarehouse = this.warehouses[index+1];
@@ -123,16 +120,21 @@ class Site {
             })
             if(warehouseToStore){
                 const warehouseId = warehouseToStore.id
+              
                 let existingInArray = aWarehousesToStore.filter(placement => placement.warehouse == warehouseId)
                 if(existingInArray.length){
-                    // console.log(existingInArray)
-                    let index = aWarehousesToStore.findIndex(placement=> placement.warehouse === warehouseId && placement.chemical === chemical)
+                    // console.log('a',existingInArray)
+                    
+                   const index= aWarehousesToStore.findIndex( placement=>  placement.warehouse === warehouseId && placement.chemical === chemical)
+        
                     aWarehousesToStore[index].amount++
                 }else{
                     aWarehousesToStore.push({'warehouse': warehouseId, 'chemical':chemical, 'amount': 1})                  
                 }
+            //     console.log(aWarehousesToStore)
             }
         }
+        // aWarehousesToStore.forEach(a=> console.log('a:',a))
        return aWarehousesToStore
     }
 

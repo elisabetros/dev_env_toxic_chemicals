@@ -9,7 +9,8 @@ class Warehouse {
     } 
 
     getChemicalsinStorage(){
-        if(this.chemicalInventory !== undefined){
+        // console.log(Object.keys(this.chemicalInventory).length)
+        if(Object.keys(this.chemicalInventory).length !== 0){
             let chemicalsAllowed;
             // const chemicalInventory = Object.keys(this.chemicalInventory)
             let totalAmount = Object.values(this.chemicalInventory)        
@@ -51,7 +52,7 @@ class Warehouse {
             if(!isSpace.includes(false)){
                 if(job.type ==='outgoing'){
                     chemicalsForWarehouse.map(chemical => {
-                        console.log(chemical.chemical)
+                        // console.log(chemical.chemical)
                         this.chemicalInventory[chemical.chemical] = this.chemicalInventory[chemical.chemical] - chemical.amount
                         if(this.chemicalInventory[chemical.chemical] === 0){
                             delete this.chemicalInventory[chemical.chemical]

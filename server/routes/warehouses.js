@@ -46,9 +46,23 @@ router.post('/processJob', async (req, res) => {
             if(job.type === 'outgoing'){
                 udpatedWarehouseStock = await WarehouseItem.query().decrement('amount', item.amount)
                 .where('warehouse_id', item.warehouse).andWhere('chemical', item.chemical)
+                udpatedWarehouse = await Warehouse.query().decrement('current_stock', item.amount)
+                .where('id', item.warehouse)
             }else{
-                udpatedWarehouseStock = await WarehouseItem.query().increment('amount', item.amount)
-                .where('warehouse_id', item.warehouse).andWhere('chemical', item.chemical)
+                thereIsChemical = await WarehouseItem.query().select('id').where('chemical',item.chemical).andWhere('warehouse_id', item.warehouse)
+                if(thereIsChemical[0]){
+                    udpatedWarehouseStock = await WarehouseItem.query().increment('amount', item.amount)
+                    .where('warehouse_id', item.warehouse).andWhere('chemical', item.chemical)
+                }else{
+                    udpatedWarehouseStock = await WarehouseItem.query().insert({
+                        warehouse_id:item.warehouse,
+                        chemical: item.chemical,
+                        amount : item.amount
+                    })
+                }
+
+                udpatedWarehouse = await Warehouse.query().increment('current_stock', item.amount)
+                .where('id', item.warehouse)
 
             }
         });

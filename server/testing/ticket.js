@@ -8,6 +8,7 @@ class Ticket {
 
     getTotalAmountOfChemicals(){
         let totalAmount = 0;
+        // console.log(this.chemicals)
         Object.keys(this.chemicals).map(chemical =>{
             totalAmount = totalAmount+this.chemicals[chemical]
         })
