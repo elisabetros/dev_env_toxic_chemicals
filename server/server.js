@@ -28,8 +28,10 @@ const WarehouseItem = require('./models/WarehouseItem')
 
 // ROUTES
 const warehouseRoute = require('./routes/warehouses')
+const processJobRoute = require('./routes/processJobs')
 
 app.use(warehouseRoute)
+app.use(processJobRoute)
 
 // ////////////////
 

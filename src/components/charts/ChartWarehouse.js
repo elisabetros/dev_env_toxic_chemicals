@@ -3,16 +3,15 @@ import Chartjs from "chart.js";
 
 const ChartWarehouse = (props) => {
   const [chartState, setChartState] = useState(props);
-  console.log(props);
-  console.log(chartState);
 
-  const warehouse = Object.values(props).pop();
-  console.log(warehouse);
-  const letters = Object.keys(props);
-  const values = Object.values(props);
+  console.log('props', Object.keys(props.chemicalInventory));
+  // console.log(chartState);
 
-  letters.pop();
-  values.pop();
+  const warehouse = props.id;
+  // console.log(warehouse);
+  const letters = Object.keys(props.chemicalInventory);
+  const values = Object.values(props.chemicalInventory);
+
 
   console.log(letters, values);
 
@@ -46,7 +45,7 @@ const ChartWarehouse = (props) => {
     },
   };
 
-  console.log("start create chart");
+  // console.log("start create chart");
   const chartContainer = useRef(null);
   const [chartInstance, setChartInstance] = useState(null);
 

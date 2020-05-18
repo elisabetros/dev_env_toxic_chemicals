@@ -1,59 +1,95 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/warehouse.css";
+import axios from 'axios'
 
 import ChartWarehouse from "./charts/ChartWarehouse";
 
 // (1st-10ku, 2nd-12ku, 3rd-5ku, 4th-3ku, 5th-9ku)
 
 export default function Warehouses() {
-  const [data1, setData1] = useState({ A: 3, C: 6, warehouse: 1 });
-  const [data2, setData2] = useState({ A: 10, C: 1, warehouse: 2 });
-  const [data3, setData3] = useState({ B: 5, warehouse: 3 });
-  const [data4, setData4] = useState({ B: 1, C: 2, warehouse: 4 });
-  const [data5, setData5] = useState({ A: 3, C: 4, warehouse: 5 });
-  const [data6, setData6] = useState({ A: 1, C: 8, warehouse: 6 });
-  const [data7, setData7] = useState({ A: 2, C: 9, warehouse: 7 });
-  const [data8, setData8] = useState({ B: 3, warehouse: 8 });
-  const [data9, setData9] = useState({ B: 3, C: 5, warehouse: 9 });
-  const [data10, setData10] = useState({ A: 1, C: 12, warehouse: 10 });
+  const [warehouses, setWarehouses] = useState([])
+  const [isLoading, setLoading] = useState(true)
+  
+  useEffect(() =>{
+    let isFetching = true
+    const fetchData = async () => {
+    const response = await axios('http://localhost/warehouses')
+    
+    const warehouses = response.data
+    for await (let warehouse of warehouses){
+      console.log(warehouses)
+     warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
+    }
+    if(isFetching){
+      setWarehouses(warehouses)
+      setLoading(false)
+    }
+  }
+  fetchData()
+    return () => isFetching = false
+},[])
 
+console.log(isLoading)
+
+
+  const fetchWarehouseStock = async (id) => {
+    const response = await axios(`http://localhost/currentstock/${id}`)
+    const warehouseStock = await response.data
+    let stockObj = {}
+    warehouseStock.map(stock => {
+            let temp ={}
+            temp[stock.chemical] = stock.amount
+            stockObj = {...temp, ...stockObj}
+            return temp
+        })
+        return stockObj
+}
+if(isLoading){
+  return(<div>Loading..</div>)
+}
+
+  if(!isLoading){
+    console.log('not loading')
+    console.log(warehouses[0])
+    // warehouses.forEach(x => console.log(x))
+  }
   return (
     <>
       <h1> This is warehouse page</h1>
       <h2>Site 1</h2>
       <div className="warehouse-container">
         <div className="canvas-container">
-          <ChartWarehouse {...data1} />
+          <ChartWarehouse {...warehouses[0]} />
         </div>
         <div className="canvas-container">
-          <ChartWarehouse {...data2} />
+          <ChartWarehouse {...warehouses[1]} />
         </div>
         <div className="canvas-container">
-          <ChartWarehouse {...data3} />
+          <ChartWarehouse {...warehouses[2]} />
         </div>
         <div className="canvas-container">
-          <ChartWarehouse {...data4} />
+          <ChartWarehouse {...warehouses[3]} />
         </div>
         <div className="canvas-container">
-          <ChartWarehouse {...data5} />
+          <ChartWarehouse {...warehouses[4]} />
         </div>
       </div>
       <h2>Site 2</h2>
       <div className="warehouse-container">
         <div className="canvas-container">
-          <ChartWarehouse {...data6} />
+          <ChartWarehouse {...warehouses[5]} />
         </div>
         <div className="canvas-container">
-          <ChartWarehouse {...data7} />
+          <ChartWarehouse {...warehouses[6]} />
         </div>
         <div className="canvas-container">
-          <ChartWarehouse {...data8} />
+          <ChartWarehouse {...warehouses[7]} />
         </div>
         <div className="canvas-container">
-          <ChartWarehouse {...data9} />
+          <ChartWarehouse {...warehouses[8]} />
         </div>
         <div className="canvas-container">
-          <ChartWarehouse {...data10} />
+          <ChartWarehouse {...warehouses[9]} />
         </div>
       </div>
     </>
