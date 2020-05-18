@@ -36,7 +36,6 @@ class Site {
     processTicket(ticket){
         ticket.status = 'pending'
         if(ticket.type === 'incoming'){
-
             console.log('incoming')
             if(this.getRemainingCapacityOfSite() >= ticket.totalAmount){
                 const placementArray = this.getWarehousesToStoreChemicals(ticket)
@@ -48,8 +47,8 @@ class Site {
                 }else{
                 ticket.status = 'Denied'
                 return false
-            }
-        
+            } 
+        }       
         }else{
             const placementArray = this.dispatchChemicals(ticket)
             if(placementArray){
@@ -61,7 +60,7 @@ class Site {
                 return false
             }
             }
-        }
+        
     }
     
 
