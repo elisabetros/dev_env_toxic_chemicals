@@ -1,5 +1,6 @@
 // create site class containing array of warehouses
 const Job = require('./job')
+
 class Site {
     constructor(id, warehouses){
         this.id = id;
@@ -34,22 +35,22 @@ class Site {
       
   }
     processTicket(ticket){
+        ticket.status = 'pending'
         if(ticket.type === 'incoming'){
 
             console.log('incoming')
             if(this.getRemainingCapacityOfSite() >= ticket.totalAmount){
-                // console.log(this.getWarehousesToStoreChemicals(ticket))
                 const placementArray = this.getWarehousesToStoreChemicals(ticket)
+                console.log(placementArray)
                 if(placementArray){
-                    
                     ticket.status = 'Approved'
                     const job = new Job('inProcess', ticket.type, placementArray)
                     return job
-                }
-            }else{
+                }else{
                 ticket.status = 'Denied'
                 return false
             }
+        }
         }else{
             const placementArray = this.dispatchChemicals(ticket)
             if(placementArray){
@@ -131,10 +132,10 @@ class Site {
                 }else{
                     aWarehousesToStore.push({'warehouse': warehouseId, 'chemical':chemical, 'amount': 1})                  
                 }
-            //     console.log(aWarehousesToStore)
             }
         }
         // aWarehousesToStore.forEach(a=> console.log('a:',a))
+            console.log(aWarehousesToStore)
        return aWarehousesToStore
     }
 
@@ -149,7 +150,6 @@ class Site {
         if(ticket.totalAmount !== 0){
             return false
         }
-        // console.log(placeMentArray)
        return placeMentArray
     }
 

@@ -68,10 +68,11 @@ const assignWarehouses = async () =>{
     for await (warehouse of site2.warehouses){
         warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
     }
-    // ---> RUN THESE ONE AT A TIME TO FILL DB
+    // ###########--> RUN THESE ONE AT A TIME TO FILL DB <--#############
+
     // let job = site2.processTicket(ticket5)
-    let job = site2.processTicket(ticket2)
-    // let job = site2.processTicket(ticket3)
+    // let job = site2.processTicket(ticket2)
+    let job = site2.processTicket(ticket3)
     // let job = site2.processTicket(ticket4)
     // let job = site2.processTicket(ticket6)
     // let job = site1.processTicket(ticket5)
@@ -80,8 +81,9 @@ const assignWarehouses = async () =>{
     // let job = site1.processTicket(ticket3)
     // let job = site1.processTicket(ticket4)
     // let job = site1.processTicket(ticket6)
-    // console.log(ticket4)
-    // console.log(job)
+    // console.log(ticket2)
+    console.log(job)
+    // console.log(ticket2.status)
     if(job.status === 'inProcess'){ 
         for await (warehouse of site1.warehouses){
             warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
@@ -95,10 +97,12 @@ const assignWarehouses = async () =>{
             const response = await axios.post(`http://localhost/processJob`, {job})
             console.log(response)
             console.log('yes')
-            console.log(job.placementArray)
          }else{
             console.log('job denied') 
          }
+    }
+    else{
+        return false
     }
     
 }
