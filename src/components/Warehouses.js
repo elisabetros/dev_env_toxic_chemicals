@@ -48,11 +48,7 @@ if(isLoading){
   return(<div>Loading..</div>)
 }
 
-  if(!isLoading){
-    console.log('not loading')
-    console.log(warehouses[0])
-    // warehouses.forEach(x => console.log(x))
-  }
+
   return (
     <>
       <h1> This is warehouse page</h1>

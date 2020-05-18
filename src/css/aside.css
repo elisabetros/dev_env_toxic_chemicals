@@ -1,9 +1,10 @@
 .aside {
   float: left;
-  margin: 0 1.5%;
-  width: 30%;
-  height: 70rem;
-  background-color: rgb(165, 165, 235);
+  margin: 0 1.5% 0 0;
+  padding:0;
+  width: 20%;
+  /* height: 70rem; */
+ 
   color: white;
 }
 
@@ -11,7 +12,12 @@ a {
   text-decoration: none;
   color: white;
 }
-
+ul{ 
+  background-color: rgb(165, 165, 235);
+  padding:0;
+  height:100%;
+  width: 100%;;
+}
 li {
   list-style: none;
   padding: 20px;

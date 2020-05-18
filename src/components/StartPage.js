@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ChartJobs from "./charts/ChartJobs";
 import "../css/startPage.css";
 
@@ -12,7 +12,21 @@ export default function StartPage() {
     ],
   });
 
+  useEffect(() => {
+    let isFetching = true
+    async function fetchJobs(){
+      console.log('fetch jobs')
+      
+    }
+    async function fetchWarehouseStock(){
+      console.log('fetch stock for alert level')
+    }
+    fetchJobs()
+    fetchWarehouseStock()
+    return () => isFetching = false
+  },[])
   console.log(alerts.alerts);
+  
   const [jobsAmonth, setJobsAmonth] = useState(134);
   const [jobsAweek, setJobsAweek] = useState(20);
   const [jobsAday, setJobsAday] = useState(3);
