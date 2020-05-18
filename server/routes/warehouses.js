@@ -4,6 +4,7 @@ const Warehouse = require('../models/Warehouse')
 const WarehouseItem = require('../models/WarehouseItem')
 const Job = require('../models/Job')
 const JobItem = require('../models/JobItem')
+const Audit = require('../models/Audit')
 
 router.get('/currentstock/:id', async (req, res) => {
     const warehouseID = req.params.id
@@ -21,9 +22,12 @@ router.post('/processJob', async (req, res) => {
     const {job} = req.body
     let siteID;
     let newJob
-    let newJobItem
-    let udpatedWarehouseStock
-    // console.log('outgoing', job)
+    let jobType
+    if(job.type === 'outgoing'){
+        jobType = 'O'
+    }else{
+        jobType = 'I'
+    }
     if(job.placementArray[0].Warehouse <= 5){
         siteID = 1
     }else{
@@ -37,38 +41,43 @@ router.post('/processJob', async (req, res) => {
         // let jobId = newJob.nJobID
         // console.log(jobId)
         job.placementArray.map(async item => {
-            newJobItem = await JobItem.query().insert({
+            await JobItem.query().insert({
                 amount:item.amount,
                 chemical: item.chemical,
                 job_id: newJob.id,
                 warehouse_id: item.warehouse
             })
             if(job.type === 'outgoing'){
-                udpatedWarehouseStock = await WarehouseItem.query().decrement('amount', item.amount)
+                await WarehouseItem.query().decrement('amount', item.amount)
                 .where('warehouse_id', item.warehouse).andWhere('chemical', item.chemical)
-                udpatedWarehouse = await Warehouse.query().decrement('current_stock', item.amount)
+                 await Warehouse.query().decrement('current_stock', item.amount)
                 .where('id', item.warehouse)
             }else{
-                thereIsChemical = await WarehouseItem.query().select('id').where('chemical',item.chemical).andWhere('warehouse_id', item.warehouse)
+                let thereIsChemical = await WarehouseItem.query().select('id').where('chemical',item.chemical).andWhere('warehouse_id', item.warehouse)
                 if(thereIsChemical[0]){
-                    udpatedWarehouseStock = await WarehouseItem.query().increment('amount', item.amount)
+                    await WarehouseItem.query().increment('amount', item.amount)
                     .where('warehouse_id', item.warehouse).andWhere('chemical', item.chemical)
                 }else{
-                    udpatedWarehouseStock = await WarehouseItem.query().insert({
+                    await WarehouseItem.query().insert({
                         warehouse_id:item.warehouse,
                         chemical: item.chemical,
                         amount : item.amount
                     })
                 }
-
-                udpatedWarehouse = await Warehouse.query().increment('current_stock', item.amount)
+               await Warehouse.query().increment('current_stock', item.amount)
                 .where('id', item.warehouse)
-
             }
+            await Audit.query().insert({
+                type: jobType,
+                chemical: item.chemical,
+                warehouse_id: item.warehouse,
+                site_id: siteID,
+                amount: item.amount
+            })
         });
-        return res.send({response: 'sucess'})
+        return res.send({response: 'success'})
     }catch(err){
-        if(err){console.log(error); 
+        if(err){console.log(err); 
             return res.send({error: 'could not update db'}); }
     }
     

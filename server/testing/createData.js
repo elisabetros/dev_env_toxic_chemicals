@@ -1,7 +1,7 @@
 const Site = require('./site')
 const Warehouse = require('./warehouse')
 const Ticket = require('./ticket')
-const Job = require('./job')
+// const Job = require('./job')
 
 const axios = require('axios')
 // 10, 12, 5, 3, 9
@@ -62,19 +62,19 @@ const fetchWarehouses = async () => {
 const assignWarehouses = async () =>{
     await fetchWarehouses()
     // fill warehouses with chemicals
-    for await (warehouse of site1.warehouses){
+    for await (let warehouse of site1.warehouses){
         warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
     }
-    for await (warehouse of site2.warehouses){
+    for await (let warehouse of site2.warehouses){
         warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
     }
     // ###########--> RUN THESE ONE AT A TIME TO FILL DB <--#############
 
     // let job = site2.processTicket(ticket5)
     // let job = site2.processTicket(ticket2)
-    let job = site2.processTicket(ticket3)
+    // let job = site2.processTicket(ticket3)
     // let job = site2.processTicket(ticket4)
-    // let job = site2.processTicket(ticket6)
+    let job = site2.processTicket(ticket6)
     // let job = site1.processTicket(ticket5)
     // let job = site1.processTicket(ticket1)
     // let job = site1.processTicket(ticket2)
@@ -83,12 +83,13 @@ const assignWarehouses = async () =>{
     // let job = site1.processTicket(ticket6)
     // console.log(ticket2)
     console.log(job)
-    // console.log(ticket2.status)
+    console.log(site2)
+    console.log(ticket6.status)
     if(job.status === 'inProcess'){ 
-        for await (warehouse of site1.warehouses){
+        for await (let warehouse of site1.warehouses){
             warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
         }
-        for await (warehouse of site2.warehouses){
+        for await (let warehouse of site2.warehouses){
             warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
         }
             console.log(site2)
@@ -113,21 +114,21 @@ const fetchWarehouseStock = async (id) => {
         const warehouseStock = await response.data
         let stockObj = {}
         warehouseStock.map(stock => {
-                temp ={}
+                let temp ={}
                 temp[stock.chemical] = stock.amount
                 stockObj = {...temp, ...stockObj}
                 return temp
             })
-           console.log(stockObj)
+        //    console.log(stockObj)
             return stockObj
 }
 
 
 const sendJobToWarehouses = async (site, job) => {
-    job.placementArray.map( (placement, index) =>{
-        const key =   Object.keys(placement)
+    job.placementArray.map( placement => {
+        // const key =   Object.keys(placement)
         // console.log(placement.warehouse)
-        site.warehouses.find((warehouse, index) => {
+        site.warehouses.find(warehouse => {
             if(warehouse.id === placement.warehouse){
             console.log(warehouse.id)
             return warehouse.checkIfSpaceForChemicals(job)

@@ -9,9 +9,18 @@ class Warehouse {
     } 
 
     getChemicalsinStorage(){
-        // console.log(Object.keys(this.chemicalInventory).length)
+        let chemicalsAllowed;
+
+        if(Object.values(this.chemicalInventory).includes(0)){
+           Object.keys(this.chemicalInventory).forEach(chemical => {
+               if(this.chemicalInventory[chemical] === 0){
+                   console.log('delete', chemical, this.chemicalInventory[chemical])
+                   delete this.chemicalInventory[chemical]
+               }
+            })
+        }
+        
         if(Object.keys(this.chemicalInventory).length !== 0){
-            let chemicalsAllowed;
             // const chemicalInventory = Object.keys(this.chemicalInventory)
             let totalAmount = Object.values(this.chemicalInventory)        
             totalAmount =  totalAmount.reduce((a, b) => a + b, 0)
@@ -57,7 +66,7 @@ class Warehouse {
                         if(this.chemicalInventory[chemical.chemical] === 0){
                             delete this.chemicalInventory[chemical.chemical]
                         }
-                        // console.log('bla',this.chemicalInventory)
+                        console.log('bla',this.chemicalInventory)
                 })
             }else{
                 console.log('incoming')
