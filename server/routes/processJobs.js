@@ -23,7 +23,7 @@ router.post('/processJob', async (req, res) => {
         siteID = 2
     }try{
         newJob = await Job.query().insert({
-            type:'O',
+            type:jobType,
             site_id: siteID        
         })
         console.log(newJob.id)

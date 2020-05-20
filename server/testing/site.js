@@ -114,7 +114,7 @@ class Site {
                              }
                              --ticket.chemicals[chemical]
                              --ticket.totalAmount   
-                             if(warehouse.chemicalInventory[chemical] ===0){
+                             if(warehouse.chemicalInventory[chemical] === 0){
                                 delete warehouse.chemicalInventory[chemical]
                             }    
                             
@@ -147,6 +147,7 @@ class Site {
     getWarehousesToStoreChemicals(ticket){
         let placeMentArray = [];
         Object.keys(ticket.chemicals).map(chemical => {
+
             const amount = ticket.chemicals[chemical]
             let individualChemicalWarehouses = this.placeIndividualChemicalTypes(amount, chemical, ticket)
             // console.log(individualChemicalWarehouses)

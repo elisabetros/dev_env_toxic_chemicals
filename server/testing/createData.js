@@ -18,26 +18,6 @@ let ticket5 = new Ticket('outgoing', {'A':2})
 let ticket6 = new Ticket('incoming', {'A':5, 'C':7})
 
 
-// site1.processTicket(ticket1)
-// // console.log(site1.warehouses)
-// site1.processTicket(ticket2)
-// // console.log(site1.warehouses)
-// site1.processTicket(ticket4)
-// console.log(ticket4.status)
-// if(ticket4.status === 'Denied'){
-//     site1.warehouses = [warehouse1, warehouse2, warehouse3, warehouse4, warehouse5]
-// }
-// console.log(site1.warehouses)
-// site2.processTicket(ticket3)
-// console.log(site2.warehouses)
-// site2.processTicket(ticket4)
-// console.log(site2.warehouses)
-// site2.processTicket(ticket5)
-// console.log(site2.warehouses)
-// site2.processTicket(ticket6)
-// console.log(site2.warehouses)
-
-
 
 let aWarehouses = []
 let aWarehouses1 = []
@@ -60,6 +40,7 @@ const fetchWarehouses = async () => {
 
 
 const assignWarehouses = async () =>{
+    console.log('assign warehouses')
     await fetchWarehouses()
     // fill warehouses with chemicals
     for await (let warehouse of site1.warehouses){
@@ -68,53 +49,24 @@ const assignWarehouses = async () =>{
     for await (let warehouse of site2.warehouses){
         warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
     }
-    // ###########--> RUN THESE ONE AT A TIME TO FILL DB <--#############
-
-    // let job = site2.processTicket(ticket5)
-    // let job = site2.processTicket(ticket2)
-    // let job = site2.processTicket(ticket3)
-    // let job = site2.processTicket(ticket4)
-    // let job = site2.processTicket(ticket6)
-    // let job = site1.processTicket(ticket1)
-    // let job = site1.processTicket(ticket2)
-    // let job = site1.processTicket(ticket3)
-    // let job = site1.processTicket(ticket4)
-    // let job = site1.processTicket(ticket5)
-    // let job = site1.processTicket(ticket6)
-    // console.log(ticket2)
-    console.log(job)
-    console.log(site2)
-    console.log(ticket6.status)
-    if(job.status === 'inProcess'){ 
-        for await (let warehouse of site1.warehouses){
-            warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
-        }
-        for await (let warehouse of site2.warehouses){
-            warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
-        }
-            console.log(site2)
-         if(sendJobToWarehouses(site1, job)){
-        //     //  TODO: send job to db, and update warehouses 
-            const response = await axios.post(`http://localhost/processJob`, {job})
-            console.log(response)
-            console.log('yes')
-         }else{
-            console.log('job denied') 
-         }
-    }
-    else{
-        return false
-    }
-    
+    console.log(site1, site2)
 }
-assignWarehouses()
+
+  
+
+   
+    // console.log(ticket2)
+   
+    
+
+
 
 const fetchWarehouseStock = async (id) => {
         const response = await axios(`http://localhost/currentstock/${id}`)
         const warehouseStock = await response.data
         let stockObj = {}
         warehouseStock.map(stock => {
-                let temp ={}
+                let temp = {}
                 temp[stock.chemical] = stock.amount
                 stockObj = {...temp, ...stockObj}
                 return temp
@@ -124,19 +76,20 @@ const fetchWarehouseStock = async (id) => {
 }
 
 
-const sendJobToWarehouses = async (site, job) => {
+const sendJobToWarehouses =  (site, job) => {
+    let isWarehouseAvailable = [];
+    console.log(job)
     job.placementArray.map( placement => {
-        // const key =   Object.keys(placement)
-        // console.log(placement.warehouse)
         site.warehouses.find(warehouse => {
+            console.log(placement.warehouse, warehouse.id)
             if(warehouse.id === placement.warehouse){
-            console.log(warehouse.id)
-            return warehouse.checkIfSpaceForChemicals(job)
-            }else{
-                return false;
+                console.log('bla', warehouse.checkIfSpaceForChemicals(job))
+                isWarehouseAvailable.push(warehouse.checkIfSpaceForChemicals(job))
+                
             }
         })
     })
+    return isWarehouseAvailable
 }
 
 
@@ -150,3 +103,52 @@ then I need to make a ticket
     if it is approved, it becomes a job
     then I have to revert the warehouses to original state from fetching
     */ 
+
+
+const createData = async (site, ticket) => {
+    await assignWarehouses()
+
+    let job = site.processTicket(ticket)
+
+    console.log(site.warehouses)
+    console.log(job)
+    console.log(ticket.status)
+
+    if(job.status === 'inProcess'){ 
+        for await (let warehouse of site.warehouses){
+            warehouse.chemicalInventory = await fetchWarehouseStock(warehouse.id)
+        }
+        console.log('originial state', site.warehouses)
+        
+        let isWarehouseAvailable = sendJobToWarehouses(site, job)
+        console.log('warhhoues available:', isWarehouseAvailable)
+         if(!isWarehouseAvailable.includes(false)){
+             console.log('true')
+        //     //  TODO: send job to db, and update warehouses 
+            const response = await axios.post(`http://localhost/processJob`, {job})
+            console.log(response)
+            console.log('yes')
+         }else{
+            console.log('job denied') 
+         }
+    }
+    else{
+        return false
+    }
+
+}
+ 
+  // ###########--> RUN THESE ONE AT A TIME TO FILL DB <--#############
+  
+// createData(site2, ticket5)
+// createData(site2, ticket2)
+// createData(site2, ticket3)
+// createData(site2, ticket4)
+// createData(site2, ticket6)
+// createData(site2, ticket1)
+// createData(site1, ticket1)
+// createData(site1, ticket2)
+// createData(site1, ticket3)
+// createData(site1, ticket4)
+// createData(site1, ticket5)
+// createData(site1, ticket6)

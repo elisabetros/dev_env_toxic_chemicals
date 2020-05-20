@@ -38,42 +38,55 @@ class Warehouse {
     }
  
     checkIfSpaceForChemicals(job){
+        
         // console.log('remaining:', this.getChemicalsinStorage().remainingStorage, 'capacity: ', this.capacity)
         const chemicalsForWarehouse= job.placementArray.filter(chemicalPlacement => chemicalPlacement.warehouse === this.id)
         let isSpace = chemicalsForWarehouse.map(chemicalPlacement => {
+            // console.log(chemicalPlacement.chemical)
             if(job.type ==='outgoing'){
-                if(this.capacity >= chemicalPlacement.amount 
-                    && this.getChemicalsinStorage().chemicalsAllowed.indexOf(chemicalPlacement.chemical)!== -1){
-                        return true
-                    }
+                if(this.chemicalInventory[chemicalPlacement.chemical] >= chemicalPlacement.amount){
+                    console.log(this.chemicalInventory[chemicalPlacement.chemical])                    
+                    return true
+                }else{
                     return false
-                    
-                }else if(job.tyoe ==='incoming'){
+                    }
+                        
+            }else if(job.type ==='incoming'){
                     if(this.getChemicalsinStorage().remainingStorage >= chemicalPlacement.amount 
                     && this.getChemicalsinStorage().chemicalsAllowed.indexOf(chemicalPlacement.chemical)!== -1){
                         return true
+                    }else{
+
+                        return false
                     }
-                    return false
                     
                 }
                 
             })
-            if(!isSpace.includes(false)){
-                if(job.type ==='outgoing'){
-                    chemicalsForWarehouse.map(chemical => {
-                        // console.log(chemical.chemical)
-                        this.chemicalInventory[chemical.chemical] = this.chemicalInventory[chemical.chemical] - chemical.amount
-                        if(this.chemicalInventory[chemical.chemical] === 0){
-                            delete this.chemicalInventory[chemical.chemical]
-                        }
-                        console.log('bla',this.chemicalInventory)
-                })
-            }else{
-                console.log('incoming')
-            }
-        }
-        return
-        
+            console.log('space', isSpace)
+        //     if(!isSpace.includes(false)){
+        //         if(job.type ==='outgoing'){
+        //             console.log('warehouse check outgoing')
+        //             chemicalsForWarehouse.map(chemical => {
+        //                 console.log(chemical)
+        //                 this.chemicalInventory[chemical.chemical] = this.chemicalInventory[chemical.chemical] - chemical.amount
+        //                 if(this.chemicalInventory[chemical.chemical] === 0){
+        //                     delete this.chemicalInventory[chemical.chemical]
+        //                 }
+        //                 console.log('bla',this.chemicalInventory)
+        //         })
+        //     }else{
+        //         console.log('warehouse check incoming')
+        //         chemicalsForWarehouse.map(chemical => {
+        //         if(!this.chemicalInventory[chemical.chemical]){
+        //             this.chemicalInventory[chemical.chemical] = 1
+        //         }else{
+        //             this.chemicalInventory[chemical.chemical] = this.chemicalInventory[chemical.chemical] + chemical.amount
+        //         }
+        //     })
+        //     }
+        // }
+        return isSpace
     }
 
 }
