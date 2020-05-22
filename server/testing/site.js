@@ -34,7 +34,6 @@ class Site {
       
   }
     processTicket(ticket){
-        ticket.status = 'pending'
         if(ticket.type === 'incoming'){
             console.log('incoming')
             if(this.getRemainingCapacityOfSite() >= ticket.totalAmount){

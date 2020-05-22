@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import "../css/chemicals.css";
 import ChartChemicalsDelivered from "./charts/ChartChemicalsDelivered";
 import ChartChemicalsDispatched from "./charts/ChartChemicalsDispatched";
+import axios from "axios";
 
 export default function Chemicals() {
   //preparing for fetch
   // const [loading, setLoading] = useState(false);
+  const[ jobs, setJobs ] = useState()
   const [selectLabelsDelivered, setselectLabelsDelivered] = useState([
     { label: "total", value: "total" },
     { label: "today", value: "today" },
@@ -53,7 +55,7 @@ export default function Chemicals() {
   const getValueForDelivered = (selectedValue) => {
     console.log(selectedValue);
 
-    console.log({ deliveryForChart });
+    // console.log({ deliveryForChart });
     deliveredByTypes.forEach((deliveredByTypes) => {
       if (selectedValue == deliveredByTypes.desc) {
         console.log({ deliveryForChart });
@@ -71,9 +73,9 @@ export default function Chemicals() {
   };
 
   const getValueForDispatched = (selectedValue) => {
-    console.log(selectedValue);
+    // console.log(selectedValue);
     dispatchedByTypes.forEach((dispatchedByTypes) => {
-      if (selectedValue == dispatchedByTypes.desc) {
+      if (selectedValue === dispatchedByTypes.desc) {
         setDispatchForChart({
           A: dispatchedByTypes.A,
           B: dispatchedByTypes.B,
@@ -87,8 +89,27 @@ export default function Chemicals() {
   };
 
   useEffect(() => {
-    console.log(deliveryForChart);
-  }, [deliveryForChart]);
+    let isFetching = true;
+    const fetchjobItems = async () => {
+      const jobs = await axios('http://localhost/jobsWithJobItems')
+      let chemicalObjA = {}
+      let chemicalObjB = {}
+      let chemicalObjC = {}
+      jobs.data.map(job => {
+        if(job.type === 'I'){
+          job.jobItem.forEach(item => {
+            console.log(item.chemical,':', item.amount, 'date:', job.date)
+          })
+        }
+        if(job.type === 'O'){
+        }
+      })
+     }
+
+    fetchjobItems()
+    return () => isFetching = false
+    // console.log(deliveryForChart);
+  }, []); //deliveryForChart
 
   return (
     <>

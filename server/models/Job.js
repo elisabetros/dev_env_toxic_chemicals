@@ -1,6 +1,7 @@
 const { Model } = require("objection");
 
 const Warehouse = require("./Warehouse");
+const JobItem = require("./JobItem");
 
 class Job extends Model {
   static get tableName() {
@@ -17,6 +18,14 @@ class Job extends Model {
           to: "warehouse.id",
         },
       },
+      jobItem: {
+        relation: Model.HasManyRelation,
+        modelClass: JobItem,
+        join:{
+          from:'jobItem.job_id',
+          to:'job.id'
+        }
+      }
     };
   }
 }
