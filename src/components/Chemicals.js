@@ -82,82 +82,79 @@ export default function Chemicals() {
     const fetchjobItems = async () => {
       const jobs = await axios('http://localhost/jobsWithJobItems')
       
-      let chemicalObjInc={today:{A:0,B:0,C:0, total:0}, total:{A:0,B:0,C:0, total:0}, week:{A:0,B:0,C:0, total:0}, month:{A:0,B:0,C:0, total:0}}
-      let chemicalObjOut={today:{A:0,B:0,C:0, total:0}, total:{A:0,B:0,C:0, total:0}, week:{A:0,B:0,C:0, total:0}, month:{A:0,B:0,C:0, total:0}}
+      let incoming = {today:{A:0,B:0,C:0, total:0}, total:{A:0,B:0,C:0, total:0}, week:{A:0,B:0,C:0, total:0}, month:{A:0,B:0,C:0, total:0}}
+      let dispatched = {today:{A:0,B:0,C:0, total:0}, total:{A:0,B:0,C:0, total:0}, week:{A:0,B:0,C:0, total:0}, month:{A:0,B:0,C:0, total:0}}
       let currDate = new Date().getDay()
       let month = new Date().getMonth()
       let currWeek = calculateWeek(new Date())
-      console.log('week', currWeek)
 
-      jobs.data.map(job => {
+      jobs.data.forEach(job => {
         job.jobItem.forEach(item => {
           let jobDate = new Date(job.date).toISOString().slice(0,10)
             // console.log(item.chemical,':', item.amount, 'date:', job.date)
             if(job.type === 'I'){
-              chemicalObjInc.total[item.chemical] = parseInt(chemicalObjInc.total[item.chemical]) + parseInt(item.amount)
-              chemicalObjInc.total.total = parseInt(chemicalObjInc.total.total) + parseInt(item.amount)
+              incoming.total[item.chemical] = parseInt(incoming.total[item.chemical]) + parseInt(item.amount)
+              incoming.total.total = parseInt(incoming.total.total) + parseInt(item.amount)
             if(month === new Date(job.date).getMonth()){
-              chemicalObjInc.month[item.chemical] = parseInt(chemicalObjInc.month[item.chemical]) + parseInt(item.amount)
-              chemicalObjInc.month.total = parseInt(chemicalObjInc.month.total) + parseInt(item.amount)
+              incoming.month[item.chemical] = parseInt(incoming.month[item.chemical]) + parseInt(item.amount)
+              incoming.month.total = parseInt(incoming.month.total) + parseInt(item.amount)
             }
             if(currDate === new Date(job.date).getDay()){
-              chemicalObjInc.today[item.chemical] = parseInt(chemicalObjInc.today[item.chemical]) + parseInt(item.amount)
-              chemicalObjInc.today.total = parseInt(chemicalObjInc.today.total) + parseInt(item.amount)
-            }
-            
-        
+              incoming.today[item.chemical] = parseInt(incoming.today[item.chemical]) + parseInt(item.amount)
+              incoming.today.total = parseInt(incoming.today.total) + parseInt(item.amount)
+            }   
             if(currWeek.includes(jobDate)){
-              chemicalObjInc.week[item.chemical] = parseInt(chemicalObjInc.week[item.chemical]) + parseInt(item.amount)
-              chemicalObjInc.week.total = parseInt(chemicalObjInc.week.total) + parseInt(item.amount)
-            }
-            
+              incoming.week[item.chemical] = parseInt(incoming.week[item.chemical]) + parseInt(item.amount)
+              incoming.week.total = parseInt(incoming.week.total) + parseInt(item.amount)
+            }            
           }
+
           if(job.type === 'O'){
-              chemicalObjOut.total[item.chemical] = parseInt(chemicalObjOut.total[item.chemical]) + parseInt(item.amount)
-              chemicalObjOut.total.total = parseInt(chemicalObjOut.total.total) + parseInt(item.amount)
+              dispatched.total[item.chemical] = parseInt(dispatched.total[item.chemical]) + parseInt(item.amount)
+              dispatched.total.total = parseInt(dispatched.total.total) + parseInt(item.amount)
             if(month === new Date(job.date).getMonth()){
-              chemicalObjOut.month[item.chemical] = parseInt(chemicalObjOut.month[item.chemical]) + parseInt(item.amount)
-              chemicalObjOut.month.total = parseInt(chemicalObjOut.month.total) + parseInt(item.amount)
+              dispatched.month[item.chemical] = parseInt(dispatched.month[item.chemical]) + parseInt(item.amount)
+              dispatched.month.total = parseInt(dispatched.month.total) + parseInt(item.amount)
             }
             if(currDate === new Date(job.date).getDay()){
-              chemicalObjOut.today[item.chemical] = parseInt(chemicalObjOut.today[item.chemical]) + parseInt(item.amount)
-              chemicalObjOut.today.total = parseInt(chemicalObjOut.today.total) + parseInt(item.amount)
+              dispatched.today[item.chemical] = parseInt(dispatched.today[item.chemical]) + parseInt(item.amount)
+              dispatched.today.total = parseInt(dispatched.today.total) + parseInt(item.amount)
             }
             if(currWeek.includes(jobDate)){
-              chemicalObjOut.week[item.chemical] = parseInt(chemicalObjOut.week[item.chemical]) + parseInt(item.amount)
-              chemicalObjOut.week.total = parseInt(chemicalObjOut.week.total) + parseInt(item.amount)
+              dispatched.week[item.chemical] = parseInt(dispatched.week[item.chemical]) + parseInt(item.amount)
+              dispatched.week.total = parseInt(dispatched.week.total) + parseInt(item.amount)
             }
           }
           })
       })
       if(isFetching){
         setDeliveredByTypes([
-          {A:chemicalObjInc.today.A, B:chemicalObjInc.today.B, C:chemicalObjInc.today.C, desc:'today', total:chemicalObjInc.today.total},
-          {A:chemicalObjInc.total.A, B:chemicalObjInc.total.B, C:chemicalObjInc.total.C, desc:'total',total:chemicalObjInc.total.total}, 
-          {A:chemicalObjInc.week.A, B:chemicalObjInc.week.B, C:chemicalObjInc.week.C, desc:'week', total:chemicalObjInc.week.total},
-          {A:chemicalObjInc.month.A, B:chemicalObjInc.month.B, C:chemicalObjInc.month.C, desc:'month', total:chemicalObjInc.month.total}
+          {A:incoming.today.A, B:incoming.today.B, C:incoming.today.C, desc:'today', total:incoming.today.total},
+          {A:incoming.total.A, B:incoming.total.B, C:incoming.total.C, desc:'total',total:incoming.total.total}, 
+          {A:incoming.week.A, B:incoming.week.B, C:incoming.week.C, desc:'week', total:incoming.week.total},
+          {A:incoming.month.A, B:incoming.month.B, C:incoming.month.C, desc:'month', total:incoming.month.total}
         ])
         setDispatchedByTypes([
-          {A:chemicalObjOut.today.A, B:chemicalObjOut.today.B, C:chemicalObjOut.today.C, desc:'today', total:chemicalObjOut.today.total},
-          {A:chemicalObjOut.total.A, B:chemicalObjOut.total.B, C:chemicalObjOut.total.C, desc:'total',total:chemicalObjOut.total.total}, 
-          {A:chemicalObjOut.week.A, B:chemicalObjOut.week.B, C:chemicalObjOut.week.C, desc:'week', total:chemicalObjOut.week.total},
-          {A:chemicalObjOut.month.A, B:chemicalObjOut.month.B, C:chemicalObjOut.month.C, desc:'month', total:chemicalObjOut.month.total}
+          {A:dispatched.today.A, B:dispatched.today.B, C:dispatched.today.C, desc:'today', total:dispatched.today.total},
+          {A:dispatched.total.A, B:dispatched.total.B, C:dispatched.total.C, desc:'total',total:dispatched.total.total}, 
+          {A:dispatched.week.A, B:dispatched.week.B, C:dispatched.week.C, desc:'week', total:dispatched.week.total},
+          {A:dispatched.month.A, B:dispatched.month.B, C:dispatched.month.C, desc:'month', total:dispatched.month.total}
           
         ])
         setDeliveryForChart({
-          A: chemicalObjInc.total.A,
-          B: chemicalObjInc.total.B,
-          C: chemicalObjInc.total.C,
+          A: incoming.total.A,
+          B: incoming.total.B,
+          C: incoming.total.C,
           desc:'total',
-          total: chemicalObjInc.total.total})
+          total: incoming.total.total})
         setDispatchForChart({
-          A: chemicalObjOut.total.A,
-          B: chemicalObjOut.total.B,
-          C: chemicalObjOut.total.C,
+          A: dispatched.total.A,
+          B: dispatched.total.B,
+          C: dispatched.total.C,
           desc:'total',
-          total: chemicalObjOut.total.total})
+          total: dispatched.total.total})
       }
-      console.log(chemicalObjInc, chemicalObjOut)
+      // console.log(incoming, dispatched)
      }
     fetchjobItems()
     return () => isFetching = false
