@@ -22,23 +22,13 @@ export default function Chemicals() {
     { label: "month", value: "month" },
   ]);
 
-  const [deliveryForChart, setDeliveryForChart] = useState();
+  const [deliveryForChart, setDeliveryForChart] = useState({});
 
-  const [dispatchForChart, setDispatchForChart] = useState();
+  const [dispatchForChart, setDispatchForChart] = useState({});
 
-  const [dispatchedByTypes, setDispatchedByTypes] = useState([
-    { A: 300, B: 78, C: 201, desc: "total", total: 579 },
-    { A: 10, B: 40, C: 6, desc: "today", total: 56 },
-    { A: 80, B: 50, C: 16, desc: "week", total: 146 },
-    { A: 150, B: 150, C: 50, desc: "month", total: 350 },
-  ]);
+  const [dispatchedByTypes, setDispatchedByTypes] = useState([]);
 
-  const [deliveredByTypes, setDeliveredByTypes] = useState([
-    // { A: 120, B: 101, C: 123, desc: "total", total: 344 },
-    // { A: 10, B: 9, C: 6, desc: "today", total: 25 },
-    // { A: 21, B: 14, C: 16, desc: "week", total: 51 },
-    // { A: 90, B: 90, C: 20, desc: "month", total: 200 },
-  ]);
+  const [deliveredByTypes, setDeliveredByTypes] = useState([]);
 
   const getValueForDelivered = (selectedValue) => {
     console.log(selectedValue);
@@ -75,19 +65,34 @@ export default function Chemicals() {
       }
     });
   };
+  const calculateWeek = () => {
+    let curr = new Date()
+    let week = []
 
+    for (let i = 1; i <= 7; i++) {
+      let first = curr.getDate() - curr.getDay() + i 
+      let day = new Date(curr.setDate(first)).toISOString().slice(0, 10)
+      week.push(day)
+    }
+    return week
+  }
   useEffect(() => {
     let isFetching = true;
+    
     const fetchjobItems = async () => {
       const jobs = await axios('http://localhost/jobsWithJobItems')
+      
       let chemicalObjInc={today:{A:0,B:0,C:0, total:0}, total:{A:0,B:0,C:0, total:0}, week:{A:0,B:0,C:0, total:0}, month:{A:0,B:0,C:0, total:0}}
       let chemicalObjOut={today:{A:0,B:0,C:0, total:0}, total:{A:0,B:0,C:0, total:0}, week:{A:0,B:0,C:0, total:0}, month:{A:0,B:0,C:0, total:0}}
       let currDate = new Date().getDay()
-      let week = "something"
       let month = new Date().getMonth()
+      let currWeek = calculateWeek(new Date())
+      console.log('week', currWeek)
+
       jobs.data.map(job => {
         job.jobItem.forEach(item => {
-            console.log(item.chemical,':', item.amount, 'date:', job.date)
+          let jobDate = new Date(job.date).toISOString().slice(0,10)
+            // console.log(item.chemical,':', item.amount, 'date:', job.date)
             if(job.type === 'I'){
               chemicalObjInc.total[item.chemical] = parseInt(chemicalObjInc.total[item.chemical]) + parseInt(item.amount)
               chemicalObjInc.total.total = parseInt(chemicalObjInc.total.total) + parseInt(item.amount)
@@ -99,6 +104,13 @@ export default function Chemicals() {
               chemicalObjInc.today[item.chemical] = parseInt(chemicalObjInc.today[item.chemical]) + parseInt(item.amount)
               chemicalObjInc.today.total = parseInt(chemicalObjInc.today.total) + parseInt(item.amount)
             }
+            
+        
+            if(currWeek.includes(jobDate)){
+              chemicalObjInc.week[item.chemical] = parseInt(chemicalObjInc.week[item.chemical]) + parseInt(item.amount)
+              chemicalObjInc.week.total = parseInt(chemicalObjInc.week.total) + parseInt(item.amount)
+            }
+            
           }
           if(job.type === 'O'){
               chemicalObjOut.total[item.chemical] = parseInt(chemicalObjOut.total[item.chemical]) + parseInt(item.amount)
@@ -111,11 +123,27 @@ export default function Chemicals() {
               chemicalObjOut.today[item.chemical] = parseInt(chemicalObjOut.today[item.chemical]) + parseInt(item.amount)
               chemicalObjOut.today.total = parseInt(chemicalObjOut.today.total) + parseInt(item.amount)
             }
+            if(currWeek.includes(jobDate)){
+              chemicalObjOut.week[item.chemical] = parseInt(chemicalObjOut.week[item.chemical]) + parseInt(item.amount)
+              chemicalObjOut.week.total = parseInt(chemicalObjOut.week.total) + parseInt(item.amount)
+            }
           }
           })
       })
       if(isFetching){
-        setDeliveredByTypes(chemicalObjInc)
+        setDeliveredByTypes([
+          {A:chemicalObjInc.today.A, B:chemicalObjInc.today.B, C:chemicalObjInc.today.C, desc:'today', total:chemicalObjInc.today.total},
+          {A:chemicalObjInc.total.A, B:chemicalObjInc.total.B, C:chemicalObjInc.total.C, desc:'total',total:chemicalObjInc.total.total}, 
+          {A:chemicalObjInc.week.A, B:chemicalObjInc.week.B, C:chemicalObjInc.week.C, desc:'week', total:chemicalObjInc.week.total},
+          {A:chemicalObjInc.month.A, B:chemicalObjInc.month.B, C:chemicalObjInc.month.C, desc:'month', total:chemicalObjInc.month.total}
+        ])
+        setDispatchedByTypes([
+          {A:chemicalObjOut.today.A, B:chemicalObjOut.today.B, C:chemicalObjOut.today.C, desc:'today', total:chemicalObjOut.today.total},
+          {A:chemicalObjOut.total.A, B:chemicalObjOut.total.B, C:chemicalObjOut.total.C, desc:'total',total:chemicalObjOut.total.total}, 
+          {A:chemicalObjOut.week.A, B:chemicalObjOut.week.B, C:chemicalObjOut.week.C, desc:'week', total:chemicalObjOut.week.total},
+          {A:chemicalObjOut.month.A, B:chemicalObjOut.month.B, C:chemicalObjOut.month.C, desc:'month', total:chemicalObjOut.month.total}
+          
+        ])
         setDeliveryForChart({
           A: chemicalObjInc.total.A,
           B: chemicalObjInc.total.B,
@@ -135,6 +163,8 @@ export default function Chemicals() {
     return () => isFetching = false
     // console.log(deliveryForChart);
   }, []); //deliveryForChart
+
+
 console.log(deliveredByTypes)
   return (
     <>
