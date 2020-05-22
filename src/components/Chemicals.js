@@ -22,21 +22,9 @@ export default function Chemicals() {
     { label: "month", value: "month" },
   ]);
 
-  const [deliveryForChart, setDeliveryForChart] = useState({
-    A: 120,
-    B: 101,
-    C: 123,
-    desc: "total",
-    total: 344,
-  });
+  const [deliveryForChart, setDeliveryForChart] = useState();
 
-  const [dispatchForChart, setDispatchForChart] = useState({
-    A: 300,
-    B: 78,
-    C: 201,
-    desc: "total",
-    total: 579,
-  });
+  const [dispatchForChart, setDispatchForChart] = useState();
 
   const [dispatchedByTypes, setDispatchedByTypes] = useState([
     { A: 300, B: 78, C: 201, desc: "total", total: 579 },
@@ -46,10 +34,10 @@ export default function Chemicals() {
   ]);
 
   const [deliveredByTypes, setDeliveredByTypes] = useState([
-    { A: 120, B: 101, C: 123, desc: "total", total: 344 },
-    { A: 10, B: 9, C: 6, desc: "today", total: 25 },
-    { A: 21, B: 14, C: 16, desc: "week", total: 51 },
-    { A: 90, B: 90, C: 20, desc: "month", total: 200 },
+    // { A: 120, B: 101, C: 123, desc: "total", total: 344 },
+    // { A: 10, B: 9, C: 6, desc: "today", total: 25 },
+    // { A: 21, B: 14, C: 16, desc: "week", total: 51 },
+    // { A: 90, B: 90, C: 20, desc: "month", total: 200 },
   ]);
 
   const getValueForDelivered = (selectedValue) => {
@@ -57,7 +45,7 @@ export default function Chemicals() {
 
     // console.log({ deliveryForChart });
     deliveredByTypes.forEach((deliveredByTypes) => {
-      if (selectedValue == deliveredByTypes.desc) {
+      if (selectedValue === deliveredByTypes.desc) {
         console.log({ deliveryForChart });
         console.log(deliveredByTypes);
         setDeliveryForChart({
@@ -126,13 +114,28 @@ export default function Chemicals() {
           }
           })
       })
+      if(isFetching){
+        setDeliveredByTypes(chemicalObjInc)
+        setDeliveryForChart({
+          A: chemicalObjInc.total.A,
+          B: chemicalObjInc.total.B,
+          C: chemicalObjInc.total.C,
+          desc:'total',
+          total: chemicalObjInc.total.total})
+        setDispatchForChart({
+          A: chemicalObjOut.total.A,
+          B: chemicalObjOut.total.B,
+          C: chemicalObjOut.total.C,
+          desc:'total',
+          total: chemicalObjOut.total.total})
+      }
       console.log(chemicalObjInc, chemicalObjOut)
      }
     fetchjobItems()
     return () => isFetching = false
     // console.log(deliveryForChart);
   }, []); //deliveryForChart
-
+console.log(deliveredByTypes)
   return (
     <>
       <div>
