@@ -92,20 +92,42 @@ export default function Chemicals() {
     let isFetching = true;
     const fetchjobItems = async () => {
       const jobs = await axios('http://localhost/jobsWithJobItems')
-      let chemicalObjA = {}
-      let chemicalObjB = {}
-      let chemicalObjC = {}
+      let chemicalObjInc={today:{A:0,B:0,C:0, total:0}, total:{A:0,B:0,C:0, total:0}, week:{A:0,B:0,C:0, total:0}, month:{A:0,B:0,C:0, total:0}}
+      let chemicalObjOut={today:{A:0,B:0,C:0, total:0}, total:{A:0,B:0,C:0, total:0}, week:{A:0,B:0,C:0, total:0}, month:{A:0,B:0,C:0, total:0}}
+      let currDate = new Date().getDay()
+      let week = "something"
+      let month = new Date().getMonth()
       jobs.data.map(job => {
-        if(job.type === 'I'){
-          job.jobItem.forEach(item => {
+        job.jobItem.forEach(item => {
             console.log(item.chemical,':', item.amount, 'date:', job.date)
+            if(job.type === 'I'){
+              chemicalObjInc.total[item.chemical] = parseInt(chemicalObjInc.total[item.chemical]) + parseInt(item.amount)
+              chemicalObjInc.total.total = parseInt(chemicalObjInc.total.total) + parseInt(item.amount)
+            if(month === new Date(job.date).getMonth()){
+              chemicalObjInc.month[item.chemical] = parseInt(chemicalObjInc.month[item.chemical]) + parseInt(item.amount)
+              chemicalObjInc.month.total = parseInt(chemicalObjInc.month.total) + parseInt(item.amount)
+            }
+            if(currDate === new Date(job.date).getDay()){
+              chemicalObjInc.today[item.chemical] = parseInt(chemicalObjInc.today[item.chemical]) + parseInt(item.amount)
+              chemicalObjInc.today.total = parseInt(chemicalObjInc.today.total) + parseInt(item.amount)
+            }
+          }
+          if(job.type === 'O'){
+              chemicalObjOut.total[item.chemical] = parseInt(chemicalObjOut.total[item.chemical]) + parseInt(item.amount)
+              chemicalObjOut.total.total = parseInt(chemicalObjOut.total.total) + parseInt(item.amount)
+            if(month === new Date(job.date).getMonth()){
+              chemicalObjOut.month[item.chemical] = parseInt(chemicalObjOut.month[item.chemical]) + parseInt(item.amount)
+              chemicalObjOut.month.total = parseInt(chemicalObjOut.month.total) + parseInt(item.amount)
+            }
+            if(currDate === new Date(job.date).getDay()){
+              chemicalObjOut.today[item.chemical] = parseInt(chemicalObjOut.today[item.chemical]) + parseInt(item.amount)
+              chemicalObjOut.today.total = parseInt(chemicalObjOut.today.total) + parseInt(item.amount)
+            }
+          }
           })
-        }
-        if(job.type === 'O'){
-        }
       })
+      console.log(chemicalObjInc, chemicalObjOut)
      }
-
     fetchjobItems()
     return () => isFetching = false
     // console.log(deliveryForChart);
