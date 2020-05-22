@@ -8,7 +8,8 @@ const Audit = require('../models/Audit')
 
 
 router.post('/processJob', async (req, res) => {
-    const {job} = req.body
+    const job = req.body
+    console.log(job.placementArray[0].warehouse )
     let siteID;
     let newJob
     let jobType
@@ -17,11 +18,13 @@ router.post('/processJob', async (req, res) => {
     }else{
         jobType = 'I'
     }
-    if(job.placementArray[0].Warehouse <= 5){
+    if(job.placementArray[0].warehouse <= 5){
         siteID = 1
     }else{
         siteID = 2
-    }try{
+    }
+    console.log(siteID)
+    try{
         newJob = await Job.query().insert({
             type:jobType,
             site_id: siteID        

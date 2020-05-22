@@ -18,11 +18,11 @@ const ChartJobs = (props) => {
         {
           label: `Jobs completes`,
           data: props.dates,
-
-          borderWidth: 1,
+          borderWidth: 5,
           pointStyle: "triangle",
           pointRadius: "10",
           pointBackgroundColor: "red",
+          fill: false
         },
       ],
       pointStyle: "triangle",

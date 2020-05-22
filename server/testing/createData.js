@@ -1,7 +1,6 @@
 const Site = require('./site')
 const Warehouse = require('./warehouse')
 const Ticket = require('./ticket')
-// const Job = require('./job')
 
 const axios = require('axios')
 // 10, 12, 5, 3, 9
@@ -16,8 +15,6 @@ let ticket3 = new Ticket('incoming', {'C':7})
 let ticket4 = new Ticket('outgoing', {'C':4})
 let ticket5 = new Ticket('outgoing', {'A':2})
 let ticket6 = new Ticket('incoming', {'A':5, 'C':7})
-
-
 
 let aWarehouses = []
 let aWarehouses1 = []
