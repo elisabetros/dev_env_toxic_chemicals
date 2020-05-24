@@ -8,8 +8,8 @@ const Audit = require('../models/Audit')
 
 
 router.post('/processJob', async (req, res) => {
-    const job = req.body
-    console.log(job.placementArray[0].warehouse )
+    const job = req.body.job
+    console.log(job )
     let siteID;
     let newJob
     let jobType

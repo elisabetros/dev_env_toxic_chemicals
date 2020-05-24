@@ -5,6 +5,7 @@ import "../css/search.css";
 import Datepicker from "./datePicker/DatePicker";
 import Accordion from "./Accordion";
 import * as moment from "moment";
+import axios from 'axios'
 
 export default function Search() {
   const [active, setActive] = useState(0);
@@ -15,74 +16,35 @@ export default function Search() {
     }
   };
 
-  const ref = useRef(null);
-
+  const ref = useRef(null); 
   const [site1DataTotal, setSite1DataTotal] = useState({
     A: 25,
     B: 15,
     C: 12,
     alert: 0,
   });
-
-  const [site1DetailedData, setSite1DetailedData] = useState([
-    {
-      chemical: "A",
-      action: "delivered",
-      date: "12-05-2020",
-      warehouse: 1,
-      ticket: "12345678",
-    },
-    {
-      chemical: "C",
-      action: "dispatched",
-      date: "04-05-2020",
-      warehouse: 1,
-      ticket: "123422678",
-    },
-    {
-      chemical: "B",
-      action: "delivered",
-      date: "07-05-2020",
-      warehouse: 5,
-      ticket: "12345228",
-    },
-    {
-      chemical: "B",
-      action: "delivered",
-      date: "08-05-2020",
-      warehouse: 2,
-      ticket: "12445678",
-    },
-    {
-      chemical: "A",
-      action: "dispatched",
-      date: "05-05-2020",
-      warehouse: 3,
-      ticket: "21345678",
-    },
-    {
-      chemical: "C",
-      action: "delivered",
-      date: "13-05-2020",
-      warehouse: 1,
-      ticket: "11345678",
-    },
-  ]);
+  
+  const [site2DetailedData, setSite2DetailedData] = useState()
+  const [site1DetailedData, setSite1DetailedData] = useState();
   // console.log(site1DataTotal);
 
-  let detailedData = site1DetailedData.map((data, i) => {
-    return (
-      <div className="table-rows" key={i}>
-        <p className="tabel-item"> {data.chemical}</p>
-        <p className="tabel-item"> {data.action}</p>
-        <p className="tabel-item"> {data.date}</p>
-        <p className="tabel-item"> {data.warehouse}</p>
-        <p className="tabel-item"> {data.ticket}</p>
-      </div>
-    );
-  });
+  let detailedData = (site) => {
+    const detailedData=site.map((data, i) => {
+      return (
+        <div className="table-rows" key={i}>
+          <p className="tabel-item"> {data.chemical}</p>
+          <p className="tabel-item"> {data.action}</p>
+          <p className="tabel-item"> {data.date}</p>
+          <p className="tabel-item"> {data.warehouse}</p>
+          <p className="tabel-item"> {data.ticket}</p>
+        </div>
+      );
+    });
+    return detailedData
+  }
 
   const renderTableHeader = (data) => {
+    console.log(data)
     let header = Object.keys(data[0]);
     return header.map((key, index) => {
       return (
@@ -130,8 +92,38 @@ export default function Search() {
     ]);
     ref.current.cleanValue();
   };
-  
+
   useEffect(() => {
+    let isFetching = true;
+    let site1Data = []
+    let site2Data = []
+    let action;
+    const fetchJobs = async () => {
+      const jobs = await axios('http://localhost/jobsWithJobItems')
+      console.log(jobs.data)
+      jobs.data.forEach(job => {
+        if(job.type === 'I'){
+          action = "delivered"
+        }else{
+          action = "dispatched"
+        }
+        let jobDate = new Date(job.date).toISOString().slice(0, 10)
+        console.log(jobDate)
+        job.jobItem.map(jobItem => {
+          console.log(jobItem)
+          if(job.site_id === 2){
+            site2Data.push({chemical: jobItem.chemical, action, date: jobDate, warehouse: jobItem.warehouse_id, ticket:job.id })
+          }else{
+            site1Data.push({chemical: jobItem.chemical, action, date: jobDate, warehouse: jobItem.warehouse_id, ticket:job.id })
+          }
+        })      
+      })
+      if(isFetching){
+        setSite1DetailedData(site1Data)
+        setSite2DetailedData(site2Data)
+      }
+    }
+    fetchJobs()
     console.log(searchDates);
     if (searchDates && searchDates.endDate) {
       console.log(searchDates);
@@ -156,7 +148,12 @@ export default function Search() {
 
   //
 
-  return (
+  
+    if(!site1DetailedData || !site2DetailedData){
+      return(<div>Loading...</div>)
+    }
+    console.log(site1DetailedData, site2DetailedData)
+    return (
     <div>
       <h1>This is search page </h1>
       <button onClick={clearFilters}>Clear all filters</button>
@@ -194,12 +191,37 @@ export default function Search() {
 
             <div>
               {renderTableHeader(site1DetailedData)}
-              {detailedData}
+              {detailedData(site1DetailedData)}
             </div>
           </div>
         </Content> 
          <Content active={active === 1}>
-          <h1>Content 2</h1>
+         <h1>Site 2</h1>
+          <div className="total-container">
+            <h2> Total</h2>
+            <p>
+              A: {site1DataTotal.A} B: {site1DataTotal.B} C: {site1DataTotal.C}{" "}
+              Alert: {site1DataTotal.alert}{" "}
+            </p>
+
+            <button onClick={sortByWarehouse}>Sort by warehouse</button>
+            <button onClick={sortByDate}>Sort by date</button>
+
+            <div>
+              <Accordion title="Search by date">
+                <Datepicker
+                  value={searchDates}
+                  onChange={handleSearchDates}
+                  ref={ref}
+                />
+              </Accordion>
+            </div>
+
+            <div>
+              {renderTableHeader(site2DetailedData)}
+              {detailedData(site2DetailedData)}
+            </div>
+          </div>
         </Content>
       </>
     </div>

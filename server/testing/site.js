@@ -40,25 +40,34 @@ class Site {
                 const placementArray = this.getWarehousesToStoreChemicals(ticket)
                 // console.log(placementArray)
                 if(placementArray){
+                    console.log('approved')
                     ticket.status = 'Approved'
                     const job = new Job('inProcess', ticket.type, placementArray)
                     return job
                 }else{
                 ticket.status = 'Denied'
+                // console.log('denied')
                 return false
             } 
-        }       
+        } else{
+            ticket.status = 'Denied'
+            // console.log('denied')
+            return false
+        }
+
         }else{
             const placementArray = this.dispatchChemicals(ticket)
             if(placementArray){
+                console.log('approved')
                 ticket.status = 'Approved'
                 const job = new Job('inProcess', ticket.type, placementArray)
                 return job
             }else{
                 ticket.status = 'Denied'
+                // console.log('denied')
                 return false
             }
-            }
+        }
         
     }
     

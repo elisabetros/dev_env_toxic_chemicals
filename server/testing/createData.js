@@ -10,11 +10,11 @@ let site1 = new Site(1)
 let site2 = new Site(2)
 
 let ticket1 = new Ticket('incoming', {'A': 1, 'C':2})
-let ticket2 = new Ticket('incoming', {'A': 7, 'C':3})
+let ticket2 = new Ticket('incoming', {'B':3})
 let ticket3 = new Ticket('incoming', {'C':7})
 let ticket4 = new Ticket('outgoing', {'C':4})
 let ticket5 = new Ticket('outgoing', {'A':2})
-let ticket6 = new Ticket('incoming', {'A':5, 'C':7})
+let ticket6 = new Ticket('incoming', {'B':5, 'C':2})
 
 let aWarehouses = []
 let aWarehouses1 = []
@@ -62,13 +62,16 @@ const fetchWarehouseStock = async (id) => {
         const response = await axios(`http://localhost/currentstock/${id}`)
         const warehouseStock = await response.data
         let stockObj = {}
+        // console.log('wares', warehouseStock)
         warehouseStock.map(stock => {
+            if(stock.amount !== 0){
                 let temp = {}
                 temp[stock.chemical] = stock.amount
                 stockObj = {...temp, ...stockObj}
-                return temp
+                return temp                
+            }
             })
-        //    console.log(stockObj)
+           console.log(stockObj)
             return stockObj
 }
 
@@ -82,7 +85,6 @@ const sendJobToWarehouses =  (site, job) => {
             if(warehouse.id === placement.warehouse){
                 console.log('bla', warehouse.checkIfSpaceForChemicals(job))
                 isWarehouseAvailable.push(warehouse.checkIfSpaceForChemicals(job))
-                
             }
         })
     })
@@ -146,6 +148,6 @@ const createData = async (site, ticket) => {
 // createData(site1, ticket1)
 // createData(site1, ticket2)
 // createData(site1, ticket3)
-// createData(site1, ticket4)
+createData(site1, ticket4)
 // createData(site1, ticket5)
 // createData(site1, ticket6)
