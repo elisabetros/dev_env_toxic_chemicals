@@ -1,7 +1,7 @@
 // expect site to exist
 // expext site to contain warehouses
-// expect ticket to get approved or not depending on space
-// expect alert to be triggered if total amount of A >=15
+// expect ticket to get approved or denied depending on space
+// expect alert to be triggered if total amount of A >= 15
 
 const Site = require('./site')
 const Warehouse = require('./warehouse')
@@ -15,7 +15,7 @@ test('expect site to exist', () => {
 const site = new Site()
 
 
-test('Expect site to contain 5 warehouses', ()=> {
+test('Expect site to contain 5 warehouses', () => {
     const warehouse =  new Warehouse()
     site.warehouses =[warehouse, warehouse, warehouse, warehouse, warehouse]
     expect(site.warehouses.length).toBe(5)

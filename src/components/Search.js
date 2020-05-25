@@ -17,12 +17,8 @@ export default function Search() {
   };
 
   const ref = useRef(null); 
-  const [site1DataTotal, setSite1DataTotal] = useState({
-    A: 25,
-    B: 15,
-    C: 12,
-    alert: 0,
-  });
+  const [site2DataTotal, setSite2DataTotal] = useState({A:0, B:0,C:0})
+  const [site1DataTotal, setSite1DataTotal] = useState({A:0, B:0,C:0});
   
   const [site2DetailedData, setSite2DetailedData] = useState()
   const [site1DetailedData, setSite1DetailedData] = useState();
@@ -56,6 +52,7 @@ export default function Search() {
   };
 
   const sortByWarehouse = () => {
+    console.log('sort by warehouse')
     // console.log(site1DetailedData[0].date);
     const sortedByWarehouse = [...site1DetailedData].sort((a, b) => {
       return a.warehouse - b.warehouse;
@@ -64,10 +61,11 @@ export default function Search() {
   };
 
   const sortByDate = () => {
+    console.log('sort by date')
     const sortedByDate = [...site1DetailedData].sort((a, b) => {
       let dateA = new Date(a.date),
         dateB = new Date(b.date);
-
+      console.log(dateA, dateB)
       return dateA - dateB;
     });
     setSite1DetailedData(sortedByDate);
@@ -78,18 +76,10 @@ export default function Search() {
   function handleSearchDates(value) {
     console.log(value);
     setSearchDates(value);
-    console.log(searchDates);
   }
 
   const clearFilters = () => {
-    setSite1DetailedData([
-      { chemical: "A", action: "delivered", date: "12-05-2020", warehouse: 1 },
-      { chemical: "C", action: "dispatched", date: "04-05-2020", warehouse: 1 },
-      { chemical: "B", action: "delivered", date: "07-05-2020", warehouse: 5 },
-      { chemical: "B", action: "delivered", date: "08-05-2020", warehouse: 2 },
-      { chemical: "A", action: "dispatched", date: "05-05-2020", warehouse: 3 },
-      { chemical: "C", action: "delivered", date: "13-05-2020", warehouse: 1 },
-    ]);
+    setSearchDates(null)
     ref.current.cleanValue();
   };
 
@@ -97,6 +87,12 @@ export default function Search() {
     let isFetching = true;
     let site1Data = []
     let site2Data = []
+    let site1ACounter = 0;
+    let site1BCounter = 0;
+    let site1CCounter = 0;
+    let site2ACounter = 0;
+    let site2BCounter = 0;
+    let site2CCounter = 0;
     let action;
     const fetchJobs = async () => {
       const jobs = await axios('http://localhost/jobsWithJobItems')
@@ -108,36 +104,65 @@ export default function Search() {
           action = "dispatched"
         }
         let jobDate = new Date(job.date).toISOString().slice(0, 10)
-        console.log(jobDate)
+        // console.log(jobDate)
         job.jobItem.map(jobItem => {
           console.log(jobItem)
           if(job.site_id === 2){
             site2Data.push({chemical: jobItem.chemical, action, date: jobDate, warehouse: jobItem.warehouse_id, ticket:job.id })
+            if (jobItem.chemical === 'A'){
+              site2ACounter = site2ACounter + jobItem.amount;
+            }
+            if (jobItem.chemical === 'B'){
+              site2BCounter = site2BCounter + jobItem.amount;
+            }
+            if (jobItem.chemical === 'C'){
+              site2CCounter = site2CCounter + jobItem.amount;
+            }
+          
           }else{
             site1Data.push({chemical: jobItem.chemical, action, date: jobDate, warehouse: jobItem.warehouse_id, ticket:job.id })
+            if (jobItem.chemical === 'A'){
+              site1ACounter = site1ACounter + jobItem.amount;
+            }
+            if (jobItem.chemical === 'B'){
+              site1BCounter = site1BCounter + jobItem.amount;
+            }
+            if (jobItem.chemical === 'C'){
+              site1CCounter = site1CCounter + jobItem.amount;
+            }
           }
         })      
       })
       if(isFetching){
         setSite1DetailedData(site1Data)
         setSite2DetailedData(site2Data)
+        setSite1DataTotal({A: site1ACounter, B:site1BCounter, C:site1CCounter})
+        setSite2DataTotal({A: site2ACounter, B:site2BCounter, C:site2CCounter})
       }
     }
-    fetchJobs()
+    if(!searchDates){
+      fetchJobs()
+    }
+
     console.log(searchDates);
-    if (searchDates && searchDates.endDate) {
+    if (searchDates && searchDates.endDate && site1DetailedData) {
       console.log(searchDates);
       let filteredDates = site1DetailedData.filter((item) => {
+        console.log( moment(item.date).isBetween(
+          moment(searchDates.startDate),
+          moment(searchDates.endDate)))
         if (
-          moment(item.date, "DD-MM-YYYY").isBetween(
+          moment(item.date).isBetween(
             moment(searchDates.startDate),
             moment(searchDates.endDate),
             null,
-            "[]"
+            '[]'
           )
         ) {
+          console.log('yes')
           return true;
         } else {
+          console.log('no')
           return false;
         }
       });
@@ -173,7 +198,6 @@ export default function Search() {
             <h2> Total</h2>
             <p>
               A: {site1DataTotal.A} B: {site1DataTotal.B} C: {site1DataTotal.C}{" "}
-              Alert: {site1DataTotal.alert}{" "}
             </p>
 
             <button onClick={sortByWarehouse}>Sort by warehouse</button>
@@ -200,8 +224,7 @@ export default function Search() {
           <div className="total-container">
             <h2> Total</h2>
             <p>
-              A: {site1DataTotal.A} B: {site1DataTotal.B} C: {site1DataTotal.C}{" "}
-              Alert: {site1DataTotal.alert}{" "}
+              A: {site2DataTotal.A} B: {site2DataTotal.B} C: {site2DataTotal.C}{" "}
             </p>
 
             <button onClick={sortByWarehouse}>Sort by warehouse</button>
