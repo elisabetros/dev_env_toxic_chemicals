@@ -4,12 +4,22 @@ import "../css/startPage.css";
 import axios from 'axios'
 
 export default function StartPage() {
-  const [alerts, setAlerts] = useState({alerts: []});
+  const [alerts, setAlerts] = useState({alerts: [ ]});
   const [jobsDone, setJobDone] = useState()
   const [ allJobsDone, setAllJobsDone ] = useState()
-  // const [jobsAmonth, setJobsAmonth] = useState();
-  // const [jobsAweek, setJobsAweek] = useState();
-  // const [jobsAday, setJobsAday] = useState();
+
+
+  const calculateWeek = () => {
+    let curr = new Date()
+    let week = []
+
+    for (let i = 1; i <= 7; i++) {
+      let first = curr.getDate() - curr.getDay() + i 
+      let day = new Date(curr.setDate(first)).toISOString().slice(0, 10)
+      week.push(day)
+    }
+    return week
+  }
 
   useEffect(() => {
     let isFetching = true
@@ -40,8 +50,10 @@ export default function StartPage() {
     }
     dateArray = findDuplicateDates(dateArray)
     console.log(dateArray)
+
     if(isFetching){
         setJobDone({dates:dateArray})
+        setAllJobsDone({dates:dateArray})
      }
     }
 
@@ -78,8 +90,9 @@ export default function StartPage() {
  
 
   const [selectLabels, setselectLabels] = useState([
-    { label: "last week", value: "week" },
-    { label: "last month", value: "month" },
+    { label: "Total", value: "total" },
+    { label: "This week", value: "week" },
+    { label: "This month", value: "month" },
   ]);
 
   //by default last 6 days are shown, on select can change to a month
@@ -91,61 +104,36 @@ export default function StartPage() {
     </div>
   ));
 
+ 
   const getValue = (selectValue) => {
     console.log(selectValue);
     if (selectValue === "month") {
       console.log(jobsDone)
-      const jobsThisMonth = jobsDone.filter(job=>{
-        const jobDate = new Date(job.date).getMonth()
+      const jobsThisMonth = allJobsDone.dates.filter(job => {
+        console.log(job)
+        const jobDate = new Date(job.t).getMonth()
         const currDate = new Date().getMonth()
-        // console.log(currDate, jobDate)
+        console.log(currDate, jobDate)
         if(jobDate === currDate){
           console.log('matches')
           return job
         }
-        // console.log(jobDate.getMonth())
-        // if(getMonth(job.date)
+      
       })
-      jobsThisMonth = jobsThisMonth.sort()
       console.log(jobsThisMonth)
-      setJobDone({dates:jobsThisMonth})
-     
-    } else {
-      setJobDone({
-        dates: [
-          {
-            t: new Date("2020-5-01"),
-            y: 3,
-          },
-          {
-            t: new Date("2020-5-03"),
-            y: 6,
-          },
+      setJobDone({dates:jobsThisMonth})     
 
-          {
-            t: new Date("2020-5-05"),
-            y: 12,
-          },
-
-          {
-            t: new Date("2020-5-06"),
-            y: 2,
-          },
-
-          {
-            t: new Date("2020-5-07 13:3"),
-            y: 10,
-          },
-          {
-            t: new Date("2020-5-08 13:3"),
-            y: 6,
-          },
-          {
-            t: new Date("2020-5-11"),
-            y: 3,
-          },
-        ],
-      });
+    } else if(selectValue === "week") {
+      let currWeek = calculateWeek()
+      let jobsThisWeek = allJobsDone.dates.filter( job => {
+        // console.log(job.t, currWeek)
+        if(currWeek.includes(new Date(job.t).toISOString().slice(0,10))){
+          return job
+        }
+      })
+      setJobDone({dates:jobsThisWeek})
+    }else{
+      setJobDone(allJobsDone);
     }
   };
 

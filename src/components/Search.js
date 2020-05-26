@@ -260,7 +260,7 @@ export default function Search() {
           <h1>Site 1</h1>
           <div className="total-container">
             <div className="total">
-              <h2> Total amount:</h2>
+              <h2> Total Inventory:</h2>
                 <h3>A: {site1DataTotal.A}</h3>
                 <h3> B: {site1DataTotal.B}</h3>
                 <h3> C: {site1DataTotal.C}{" "}</h3>
