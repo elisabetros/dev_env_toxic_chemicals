@@ -86,7 +86,7 @@ export default function Search() {
     }
   };
 
-  const sortByChemical = async (chemical, site) => {  
+  const sortByChemical = (chemical, site) => {  
       console.log('sort by chemical', chemical, site)
     const sortedByChemical = [...site].filter(ticket => chemical === ticket.chemical) //chemical !== ticket.chemical
     if(site === site1DetailedData){
@@ -97,6 +97,17 @@ export default function Search() {
     }
   }
   
+  const sortByJobType = (type, site) => {
+    console.log('sort by job type')
+    const filteredByJobType = [...site].filter(job => type === job.action)
+    console.log(filteredByJobType)
+    if(site === site1DetailedData){
+      setSite1ForDisplay(filteredByJobType)
+    }else{
+      setSite2ForDisplay(filteredByJobType)
+    }
+  }
+
 
   function handleSearchDates(value) {
     console.log(value);
@@ -243,6 +254,8 @@ export default function Search() {
             <button onClick={() => sortByChemical('A', site1DetailedData)}>Show all A chemicals</button>
             <button onClick={() => sortByChemical('B', site1DetailedData)}>Show all B chemicals</button>
             <button onClick={() => sortByChemical('C', site1DetailedData)}>Show all C chemicals</button>
+            <button onClick={() => sortByJobType('delivered', site1DetailedData)}>Show all delivered</button>
+            <button onClick={() => sortByJobType('dispatched', site1DetailedData)}>Show all dispatched</button>
           </div>
 
             <div>
@@ -280,6 +293,8 @@ export default function Search() {
             <button onClick={() => sortByChemical('A', site2DetailedData)}>Show all A</button>
             <button onClick={() => sortByChemical('B', site2DetailedData)}>Show all B</button>
             <button onClick={() => sortByChemical('C', site2DetailedData)}>Show all C</button>
+            <button onClick={() => sortByJobType('delivered', site2DetailedData)}>Show all delivered</button>
+            <button onClick={() => sortByJobType('dispatched', site2DetailedData)}>Show all dispatched</button>
           </div>
 
             <div>

@@ -46,12 +46,10 @@ class Site {
                     return job
                 }else{
                 ticket.status = 'Denied'
-                // console.log('denied')
                 return false
             } 
         } else{
             ticket.status = 'Denied'
-            // console.log('denied')
             return false
         }
 
@@ -74,9 +72,7 @@ class Site {
 
     placeIndividualChemicalTypes(amount, chemical, ticket) {
         let aWarehousesToStore = []
-        let warehouseId;
         for(let i = 0; i< amount; i++){
-
             const warehouseToStore = this.warehouses.find((warehouse, index) => {
                 // console.log('os', warehouse.chemicalInventory)
                 const chemicalsAllowed= warehouse.getChemicalsinStorage().chemicalsAllowed
@@ -106,8 +102,7 @@ class Site {
                                 ++warehouse.chemicalInventory[chemical]
                             }
                             --ticket.chemicals[chemical]
-                            --ticket.totalAmount                          
-                            // warehouseId = warehouse.id   
+                            --ticket.totalAmount            
                                               
                             return warehouse
                        }

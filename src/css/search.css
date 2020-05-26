@@ -57,7 +57,9 @@
     padding: 1em 1.5em;
   }
   .total-container{
-    margin:0 5rem;
+    margin:0 5rem 0 0 ;
+    grid-template-columns: 1.5fr 5fr;
+    grid-gap:2%;
   }
   .total{
     display: grid;
@@ -75,10 +77,16 @@
  
   .buttonWrapper button{
     color:white;
+    margin:0;
+    border:1px solid black;
   }
+  
   .buttonWrapper{
+    grid-column: 1;
+    grid-row:1/8;
+    float:left;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    max-height:80vh;
   }
   .tabel-header {
     display: inline-block;
