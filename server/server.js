@@ -46,9 +46,9 @@ app.use(auditRoute)
 
 const port = process.env.PORT || 80
 
-const server = app.listen(port, (error) => {
+app.listen(port, (error) => {
   if (error) {
     console.log("Error running express", error);
   }
-  console.log("The server is running on port", server.address().port);
+  console.log("The server is running on port", port);
 });
