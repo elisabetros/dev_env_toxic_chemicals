@@ -1,9 +1,24 @@
 header {
   width: 100%;
   height: 3rem;
-  background-color: green;
 }
 
 .active {
-  color: red;
+  background-color: #1B998B;
+}
+button{
+  cursor: pointer;
+    outline:none;
+    margin: 0 1rem 1rem;
+    padding:1rem;
+  
+    border:none;
+    background-color: #333745;
+}
+h1, h2{
+  text-align: center;
+}
+
+h2{
+  color:#1B998B;
 }

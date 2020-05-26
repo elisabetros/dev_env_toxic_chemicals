@@ -2,6 +2,9 @@ import styled from "styled-components";
 export const Tabs = styled.div`
   overflow: hidden;
   background: #fff;
+  width:100%;
+  display:block;
+  margin:0 4%;
   font-family: Open Sans;
   height: 3em;
 `;
@@ -10,9 +13,9 @@ export const Tab = styled.button`
   border: none;
   outline: none;
   cursor: pointer;
-  width: 40%;
+  width: 45%;
+  margin:0 1%;
   position: relative;
-  margin-right: 0.1em;
   font-size: 1em;
   border: ${(props) => (props.active ? "1px solid #ccc" : "")};
   border-bottom: ${(props) => (props.active ? "none" : "")};

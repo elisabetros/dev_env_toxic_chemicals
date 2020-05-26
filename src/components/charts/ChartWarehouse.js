@@ -24,10 +24,9 @@ const ChartWarehouse = (props) => {
           label: `Warehouse# ${warehouse}`,
           data: values,
           backgroundColor: [
-            "rgba(255, 99, 132, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
+           '#47b39c',
+            '#FFc154',
           ],
-          borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)"],
           borderWidth: 1,
         },
       ],

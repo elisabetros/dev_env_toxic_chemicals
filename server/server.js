@@ -30,11 +30,12 @@ const WarehouseItem = require('./models/WarehouseItem')
 const warehouseRoute = require('./routes/warehouses')
 const processJobRoute = require('./routes/processJob')
 const jobRoute = require('./routes/jobs')
+const auditRoute = require('./routes/audits')
 
 app.use(warehouseRoute)
 app.use(processJobRoute)
 app.use(jobRoute)
-
+app.use(auditRoute)
 // ////////////////
 
 // app.get('/', async (req, res) => {  

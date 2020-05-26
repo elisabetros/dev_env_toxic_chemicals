@@ -21,7 +21,8 @@ function Month({ year, month, firstDayOfWeek }) {
           gridTemplateColumns: "repeat(7, 1fr)",
           justifyContent: "center",
           marginBottom: "10px",
-          fontSize: "10px",
+          fontSize: "15px",
+          color: '#1B998B'
         }}
       >
         {weekdayLabels.map((dayLabel) => (

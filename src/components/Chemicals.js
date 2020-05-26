@@ -166,7 +166,7 @@ console.log(deliveredByTypes)
   return (
     <>
       <div>
-        <h1> This is chemicals page</h1>
+        <h1> All chemicals on sites</h1>
         <div className="chemicals-container">
           <div className="deliver-container">
             <h2>Delivered</h2>

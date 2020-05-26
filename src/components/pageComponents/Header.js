@@ -10,7 +10,7 @@ export default function Header() {
   return (
     <>
       <div className="main-header">
-        <h1> Hello {user.name}</h1>
+        <h3> Hello {user.name}</h3>
         <p className="currentTime">{date}</p>
       </div>
     </>

@@ -30,8 +30,8 @@
     cursor: pointer;
     color: #666;
     padding: 0.5em 1.5em;
-    border: solid 1px #ccc;
-    border-radius: 1.5em;
+    border: solid 1px #D2D5DD;
+    /* border-radius: 1.5em; */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -56,18 +56,56 @@
   .accordion-content {
     padding: 1em 1.5em;
   }
+  .total-container{
+    margin:0 5rem;
+  }
+  .total{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .total h3,
+  .total h2{
+    align-self: end;
+    margin:0 0 .5rem 0;
+  }
   
+  .buttonWrapper button:first-child {
+    background-color: dimgrey;
+  }
+ 
+  .buttonWrapper button{
+    color:white;
+  }
+  .buttonWrapper{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
   .tabel-header {
     display: inline-block;
     padding: 1rem;
+    margin:0;
     font-weight: bold;
+    border-right: 1px solid #D2D5DD;    
+    color: #1B998B;
   }
-  
+  .tableHeaders{
+    border-bottom: 1px solid #D2D5DD;    
+    display: grid;
+    margin:1rem 0;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  }
   .tabel-item {
     display: inline-block;
     padding: 1rem;
+    margin:0;
+    border-right: 1px solid #D2D5DD;
   }
-  
+  .tabel-item:last-child,
+  .tabel-header:last-child{
+    border:none;
+  }
   .table-rows {
-    border: 1px solid black;
+    border: 1px solid #D2D5DD;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   }

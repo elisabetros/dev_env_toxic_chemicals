@@ -1,4 +1,6 @@
 .chemicals-container {
   display: grid;
   grid-template-columns: 2fr 2fr;
+  width: 80vw;
+  margin:auto;
 }

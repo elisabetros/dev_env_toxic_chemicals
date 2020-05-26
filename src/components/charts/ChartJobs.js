@@ -21,7 +21,7 @@ const ChartJobs = (props) => {
           borderWidth: 5,
           pointStyle: "triangle",
           pointRadius: "10",
-          pointBackgroundColor: "red",
+          pointBackgroundColor: "#ec6b56",
           fill: false
         },
       ],

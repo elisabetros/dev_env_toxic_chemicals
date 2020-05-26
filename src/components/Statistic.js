@@ -1,6 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function Statistic() {
+
+  useEffect(() => {
+
+    const fetchAuditData = async () => {
+      const auditData = await axios('http://localhost/auditData')
+      console.log(auditData.data)
+    }
+
+    fetchAuditData()
+  },[])
+
+
   return (
     <>
       <div>

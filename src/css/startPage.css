@@ -1,8 +1,9 @@
 .container-start-page {
   display: grid;
   grid-gap: 10px;
-  grid-template-columns: [col] 22% [col] 22% [col] 22% [col] 22%;
-  grid-template-rows: [row] 100% [row] 100% [row];
+  grid-template-columns: 2fr 3fr;
+  width:80vw;
+  margin:auto;
 }
 
 .box {
@@ -11,14 +12,9 @@
   border: 1px solid black;
 }
 
-.alerts {
-  grid-column: col;
-  grid-row: row;
-}
-
 .jobs {
-  grid-column: col 2 / span 3;
-  grid-row: row;
+  width: 100%;
+  margin:0 auto;
 }
 
 .notify {

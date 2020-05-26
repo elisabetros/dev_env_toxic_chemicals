@@ -152,7 +152,7 @@ export default function StartPage() {
   return (
     <>
       <div>
-        <h1> This is start page</h1>
+        <h1> Completed Jobs</h1>
         <div className="container-start-page">
           <div className="alerts box">
             active alerts

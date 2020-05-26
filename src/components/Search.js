@@ -180,8 +180,8 @@ export default function Search() {
     console.log(site1DetailedData, site2DetailedData)
     return (
     <div>
-      <h1>This is search page </h1>
-      <button onClick={clearFilters}>Clear all filters</button>
+      {/* <h1>This is search page </h1>  */}
+     
       <Tabs>
         <Tab onClick={handleClick} active={active === 0} id={0}>
           Site 1
@@ -195,13 +195,17 @@ export default function Search() {
      <Content active={active === 0}>
           <h1>Site 1</h1>
           <div className="total-container">
-            <h2> Total</h2>
-            <p>
-              A: {site1DataTotal.A} B: {site1DataTotal.B} C: {site1DataTotal.C}{" "}
-            </p>
-
+            <div className="total">
+              <h2> Total amount:</h2>
+                <h3>A: {site1DataTotal.A}</h3>
+                <h3> B: {site1DataTotal.B}</h3>
+                <h3> C: {site1DataTotal.C}{" "}</h3>
+          </div>
+          <div className="buttonWrapper">
+            <button onClick={clearFilters}>Clear all filters</button>
             <button onClick={sortByWarehouse}>Sort by warehouse</button>
             <button onClick={sortByDate}>Sort by date</button>
+          </div>
 
             <div>
               <Accordion title="Search by date">
@@ -213,8 +217,9 @@ export default function Search() {
               </Accordion>
             </div>
 
-            <div>
-              {renderTableHeader(site1DetailedData)}
+            <div className="tickets">
+              <div className="tableHeaders">{renderTableHeader(site1DetailedData)}</div>
+              
               {detailedData(site1DetailedData)}
             </div>
           </div>
@@ -222,13 +227,19 @@ export default function Search() {
          <Content active={active === 1}>
          <h1>Site 2</h1>
           <div className="total-container">
-            <h2> Total</h2>
-            <p>
-              A: {site2DataTotal.A} B: {site2DataTotal.B} C: {site2DataTotal.C}{" "}
-            </p>
+            <div className="total">
+              <h2> Total amount:</h2>
+                <h3>A: {site1DataTotal.A}</h3>
+                <h3> B: {site1DataTotal.B}</h3>
+                <h3> C: {site1DataTotal.C}{" "}</h3>
+            </div>
+         
 
+          <div className="buttonWrapper">
+            <button onClick={clearFilters}>Clear all filters</button>
             <button onClick={sortByWarehouse}>Sort by warehouse</button>
             <button onClick={sortByDate}>Sort by date</button>
+          </div>
 
             <div>
               <Accordion title="Search by date">
@@ -241,7 +252,7 @@ export default function Search() {
             </div>
 
             <div>
-              {renderTableHeader(site2DetailedData)}
+            <div className="tableHeaders">{renderTableHeader(site1DetailedData)}</div>
               {detailedData(site2DetailedData)}
             </div>
           </div>

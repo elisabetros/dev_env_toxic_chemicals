@@ -51,7 +51,7 @@ if(isLoading){
 
   return (
     <>
-      <h1> This is warehouse page</h1>
+      <h1> Warehouse current stock</h1>
       <h2>Site 1</h2>
       <div className="warehouse-container">
         <div className="canvas-container">

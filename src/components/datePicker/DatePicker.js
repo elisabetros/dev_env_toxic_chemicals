@@ -91,8 +91,8 @@ const Datepicker = forwardRef((props, ref) => {
       <div
         css={{
           display: "grid",
-          margin: "32px 0 0",
-          gridTemplateColumns: `repeat(${activeMonths.length}, 300px)`,
+          margin: "0",
+          gridTemplateColumns: `repeat(${activeMonths.length}, 1fr)`,
           gridGap: "0 64px",
         }}
       >
