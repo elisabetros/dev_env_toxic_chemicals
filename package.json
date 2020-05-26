@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "React Node Express SQL ORM",
   "main": "server.js",
+  "engines": {
+    "node": "10.16.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

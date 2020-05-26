@@ -44,8 +44,9 @@ app.use(auditRoute)
 //   res.send(result)
 // })
 
+const port = process.env.PORT || 80
 
-const server = app.listen(process.env.PORT, (error) => {
+const server = app.listen(port, (error) => {
   if (error) {
     console.log("Error running express", error);
   }
