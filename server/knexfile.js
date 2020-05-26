@@ -11,10 +11,8 @@ module.exports = {
     },
   },
       production: {
-        connection: {
-          database: 'mysql://g80nt5hbvhctxug5:vx203i9q039mqq0u@ou6zjjcqbi307lip.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/ua24ml0yzx4h8g8t',
-        
-        },
+        client: 'mysql',
+        connection: process.env.JAWSDB_MARIA_URL,
       },
   ...knexSnakeCaseMapper()
 };
