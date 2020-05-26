@@ -63,12 +63,13 @@
   }
   .total{
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
   }
   .total h3,
   .total h2{
     align-self: end;
-    margin:0 0 .5rem 0;
+    margin:0 ;
+    text-align: left;
   }
   
   .buttonWrapper button:first-child {
