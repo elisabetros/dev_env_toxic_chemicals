@@ -1,12 +1,13 @@
 const express = require("express");
-// const bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
+const path = require('path')
 
 const cors = require("cors");
 
 const app = express();
 
-// app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.use(cors());
 
@@ -38,6 +39,15 @@ app.use(jobRoute)
 app.use(auditRoute)
 // ////////////////
 
+
+if (process.env.NODE_ENV === "production") {
+  //Set static folder
+  app.use(express.static("build"));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
 // app.get('/', async (req, res) => {  
 //   const result = await ChemicalStock.query().withGraphFetched("warehouse").orderBy('nWarehouseID');
 //   res.header("Access-Control-Allow-Origin", "*");
