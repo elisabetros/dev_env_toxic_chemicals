@@ -62,9 +62,11 @@ export default function Search() {
     const sortedByWarehouse = [...site].sort((a, b) => {
       return a.warehouse - b.warehouse;
     });
+    if(site === site1ForDisplay){
       setSite1ForDisplay(sortedByWarehouse)
+    }else{
       setSite2ForDisplay(sortedByWarehouse)
-    
+    }
   };
 
   const sortByDate = (site) => {
@@ -76,26 +78,33 @@ export default function Search() {
       return dateA - dateB;
     });
     console.log(sortedByDate)
+    if(site === site1ForDisplay){
       setSite1ForDisplay(sortedByDate)
+    }else{
       setSite2ForDisplay(sortedByDate)
+    }
   };
 
   const sortByChemical = (chemical, site) => {  
       console.log('sort by chemical', chemical, site)
     const sortedByChemical = [...site].filter(ticket => chemical === ticket.chemical) //chemical !== ticket.chemical
-   
+    if(site === site1DetailedData){
       console.log(sortedByChemical)
       setSite1ForDisplay(sortedByChemical)
+    }else{
       setSite2ForDisplay(sortedByChemical)
+    }
   }
   
   const sortByJobType = (type, site) => {
     console.log('sort by job type')
     const filteredByJobType = [...site].filter(job => type === job.action)
     console.log(filteredByJobType)
+    if(site === site1DetailedData){
       setSite1ForDisplay(filteredByJobType)
+    }else{
       setSite2ForDisplay(filteredByJobType)
-    
+    }
   }
 
 
@@ -160,7 +169,7 @@ export default function Search() {
         })      
       })
       if(isFetching){
-
+        
         setSite1DetailedData(site1Data)
         setSite2DetailedData(site2Data)
 
@@ -188,15 +197,16 @@ export default function Search() {
             '[]'
           )
         ) {
+          // console.log('yes')
           return true;
         } else {
+          // console.log('no')
           return false;
         }
       });
       if(filteredDates.length){
         setError('')
         setSite1ForDisplay(filteredDates);
-        setSite2ForDisplay(filteredDates);
       }else{
         setError('No jobs on those days')
       }
