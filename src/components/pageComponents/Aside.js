@@ -18,31 +18,21 @@ export default function Aside() {
       <div>
         <nav className="aside">
           <ul>
-            {/* <li> */}
               <NavLink to="/" exact={true} activeClassName="active">
                 Start page
               </NavLink>
-            {/* </li>
-            <li> */}
               <NavLink to="/chemicals" activeClassName="active">
                 Chemicals
               </NavLink>
-            {/* </li>
-            <li> */}
               <NavLink to="/warehouses" activeClassName="active">
                 Warehouses
               </NavLink>
-            {/* </li>
-            <li> */}
               <NavLink to="/search" activeClassName="active">
                 Search
               </NavLink>
-            {/* </li>
-            <li> */}
-              <NavLink to="/statistics" activeClassName="active">
+              {/* <NavLink to="/statistics" activeClassName="active">
                 Statistics
-              </NavLink>
-            {/* </li> */}
+              </NavLink> */}
           </ul>
         </nav>
 
@@ -56,9 +46,9 @@ export default function Aside() {
           <Route path="/search">
             <Search />
           </Route>
-          <Route path="/statistics">
+          {/* <Route path="/statistics">
             <Statistic />
-          </Route>
+          </Route> */}
           <Route path="/">
             <StartPage />
           </Route>

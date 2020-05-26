@@ -186,9 +186,9 @@ export default function Search() {
     }
 
     console.log(searchDates);
-    if (searchDates && searchDates.endDate && site1DetailedData) {
+    if (searchDates && searchDates.endDate && site1DetailedData && site2DetailedData) {
       console.log(searchDates);
-      let filteredDates = site1ForDisplay.filter((item) => {
+      let filteredDatesSite1 = site1ForDisplay.filter((item) => {
         if (
           moment(item.date).isBetween(
             moment(searchDates.startDate),
@@ -204,9 +204,31 @@ export default function Search() {
           return false;
         }
       });
-      if(filteredDates.length){
+      let filteredDatesSite2 = site2ForDisplay.filter((item) => {
+        if (
+          moment(item.date).isBetween(
+            moment(searchDates.startDate),
+            moment(searchDates.endDate),
+            null,
+            '[]'
+          )
+        ) {
+          // console.log('yes')
+          return true;
+        } else {
+          // console.log('no')
+          return false;
+        }
+      });
+      if(filteredDatesSite1.length){
         setError('')
-        setSite1ForDisplay(filteredDates);
+        setSite1ForDisplay(filteredDatesSite1);
+      }else{
+        setError('No jobs on those days')
+      }
+      if(filteredDatesSite2.length){
+        setError('')
+        setSite2ForDisplay(filteredDatesSite2);
       }else{
         setError('No jobs on those days')
       }
