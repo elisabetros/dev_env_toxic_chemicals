@@ -190,9 +190,6 @@ export default function Search() {
     if (searchDates && searchDates.endDate && site1DetailedData) {
       console.log(searchDates);
       let filteredDates = site1ForDisplay.filter((item) => {
-        console.log( moment(item.date).isBetween(
-          moment(searchDates.startDate),
-          moment(searchDates.endDate)))
         if (
           moment(item.date).isBetween(
             moment(searchDates.startDate),
@@ -201,10 +198,10 @@ export default function Search() {
             '[]'
           )
         ) {
-          console.log('yes')
+          // console.log('yes')
           return true;
         } else {
-          console.log('no')
+          // console.log('no')
           return false;
         }
       });
