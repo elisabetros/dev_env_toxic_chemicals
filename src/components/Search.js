@@ -22,6 +22,12 @@ export default function Search() {
   
   const [site2DetailedData, setSite2DetailedData] = useState()
   const [site1DetailedData, setSite1DetailedData] = useState();
+
+  const [searchDates, setSearchDates] = useState();
+  const [site1ForDisplay, setSite1ForDisplay] = useState()
+  const [site2ForDisplay, setSite2ForDisplay] = useState()
+
+  const [error, setError] = useState()
   // console.log(site1DataTotal);
 
   let detailedData = (site) => {
@@ -51,27 +57,46 @@ export default function Search() {
     });
   };
 
-  const sortByWarehouse = () => {
+  const sortByWarehouse = (site) => {
     console.log('sort by warehouse')
     // console.log(site1DetailedData[0].date);
-    const sortedByWarehouse = [...site1DetailedData].sort((a, b) => {
+    const sortedByWarehouse = [...site].sort((a, b) => {
       return a.warehouse - b.warehouse;
     });
-    setSite1DetailedData(sortedByWarehouse);
+    if(site === site1ForDisplay){
+      setSite1ForDisplay(sortedByWarehouse)
+    }else{
+      setSite2ForDisplay(sortedByWarehouse)
+    }
   };
 
-  const sortByDate = () => {
+  const sortByDate = (site) => {
     console.log('sort by date')
-    const sortedByDate = [...site1DetailedData].sort((a, b) => {
+    const sortedByDate = [...site].sort((a, b) => {
       let dateA = new Date(a.date),
         dateB = new Date(b.date);
       console.log(dateA, dateB)
       return dateA - dateB;
     });
-    setSite1DetailedData(sortedByDate);
+    console.log(sortedByDate)
+    if(site === site1ForDisplay){
+      setSite1ForDisplay(sortedByDate)
+    }else{
+      setSite2ForDisplay(sortedByDate)
+    }
   };
 
-  const [searchDates, setSearchDates] = useState();
+  const sortByChemical = async (chemical, site) => {  
+      console.log('sort by chemical', chemical, site)
+    const sortedByChemical = [...site].filter(ticket => chemical === ticket.chemical) //chemical !== ticket.chemical
+    if(site === site1DetailedData){
+      console.log(sortedByChemical)
+      setSite1ForDisplay(sortedByChemical)
+    }else{
+      setSite2ForDisplay(sortedByChemical)
+    }
+  }
+  
 
   function handleSearchDates(value) {
     console.log(value);
@@ -134,20 +159,26 @@ export default function Search() {
         })      
       })
       if(isFetching){
+        console.log('message')
         setSite1DetailedData(site1Data)
         setSite2DetailedData(site2Data)
+
+        setSite1ForDisplay(site1Data)
+        setSite2ForDisplay(site2Data)
+
         setSite1DataTotal({A: site1ACounter, B:site1BCounter, C:site1CCounter})
         setSite2DataTotal({A: site2ACounter, B:site2BCounter, C:site2CCounter})
       }
     }
     if(!searchDates){
+      console.log('fetch')
       fetchJobs()
     }
 
     console.log(searchDates);
     if (searchDates && searchDates.endDate && site1DetailedData) {
       console.log(searchDates);
-      let filteredDates = site1DetailedData.filter((item) => {
+      let filteredDates = site1ForDisplay.filter((item) => {
         console.log( moment(item.date).isBetween(
           moment(searchDates.startDate),
           moment(searchDates.endDate)))
@@ -166,22 +197,26 @@ export default function Search() {
           return false;
         }
       });
-      console.log(filteredDates);
-      setSite1DetailedData(filteredDates);
+      if(filteredDates.length){
+        setError('')
+        setSite1ForDisplay(filteredDates);
+      }else{
+        setError('No jobs on those days')
+      }
     }
   }, [searchDates]);
 
   //
 
   
-    if(!site1DetailedData || !site2DetailedData){
+    if(!site1ForDisplay || !site2ForDisplay){
       return(<div>Loading...</div>)
     }
     console.log(site1DetailedData, site2DetailedData)
     return (
     <div>
       {/* <h1>This is search page </h1>  */}
-     
+      <div className={error ? ' errorAnim': null}>{error}</div>
       <Tabs>
         <Tab onClick={handleClick} active={active === 0} id={0}>
           Site 1
@@ -203,8 +238,11 @@ export default function Search() {
           </div>
           <div className="buttonWrapper">
             <button onClick={clearFilters}>Clear all filters</button>
-            <button onClick={sortByWarehouse}>Sort by warehouse</button>
-            <button onClick={sortByDate}>Sort by date</button>
+            <button onClick={() => sortByWarehouse(site1ForDisplay)}>Sort by warehouse</button>
+            <button onClick={() => sortByDate(site1ForDisplay)}>Sort by date</button>
+            <button onClick={() => sortByChemical('A', site1DetailedData)}>Show all A chemicals</button>
+            <button onClick={() => sortByChemical('B', site1DetailedData)}>Show all B chemicals</button>
+            <button onClick={() => sortByChemical('C', site1DetailedData)}>Show all C chemicals</button>
           </div>
 
             <div>
@@ -218,9 +256,9 @@ export default function Search() {
             </div>
 
             <div className="tickets">
-              <div className="tableHeaders">{renderTableHeader(site1DetailedData)}</div>
+              <div className="tableHeaders">{renderTableHeader(site1ForDisplay)}</div>
               
-              {detailedData(site1DetailedData)}
+              {detailedData(site1ForDisplay)}
             </div>
           </div>
         </Content> 
@@ -229,16 +267,19 @@ export default function Search() {
           <div className="total-container">
             <div className="total">
               <h2> Total amount:</h2>
-                <h3>A: {site1DataTotal.A}</h3>
-                <h3> B: {site1DataTotal.B}</h3>
-                <h3> C: {site1DataTotal.C}{" "}</h3>
+                <h3>A: {site2DataTotal.A}</h3>
+                <h3> B: {site2DataTotal.B}</h3>
+                <h3> C: {site2DataTotal.C}{" "}</h3>
             </div>
          
 
           <div className="buttonWrapper">
             <button onClick={clearFilters}>Clear all filters</button>
-            <button onClick={sortByWarehouse}>Sort by warehouse</button>
-            <button onClick={sortByDate}>Sort by date</button>
+            <button onClick={() => sortByWarehouse(site2ForDisplay)}>Sort by warehouse</button>
+            <button onClick={() => sortByDate(site2ForDisplay)}>Sort by date</button>
+            <button onClick={() => sortByChemical('A', site2DetailedData)}>Show all A</button>
+            <button onClick={() => sortByChemical('B', site2DetailedData)}>Show all B</button>
+            <button onClick={() => sortByChemical('C', site2DetailedData)}>Show all C</button>
           </div>
 
             <div>
@@ -252,8 +293,8 @@ export default function Search() {
             </div>
 
             <div>
-            <div className="tableHeaders">{renderTableHeader(site1DetailedData)}</div>
-              {detailedData(site2DetailedData)}
+            <div className="tableHeaders">{renderTableHeader(site2ForDisplay)}</div>
+              {detailedData(site2ForDisplay)}
             </div>
           </div>
         </Content>

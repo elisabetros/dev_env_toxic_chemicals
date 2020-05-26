@@ -61,7 +61,8 @@ function Day({ dayLabel, date }) {
       type="button"
       ref={dayRef}
       css={{
-        padding: "1%",
+        padding: "8px",
+        margin:'1%',
         fontSize:'80%',
         border: 0,
         color: getColorFn({
