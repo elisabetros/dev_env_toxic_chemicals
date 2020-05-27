@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ticketCSS from '../css/addTicket.css'
+import { Tabs, Tab, Content } from "./TabStyle";
 import axios from "axios";
 
 const AddTicket = () => {
@@ -15,13 +16,26 @@ const AddTicket = () => {
     const [job, setJob] = useState()
     const [process, setProcess] = useState()
 
+    const [active, setActive] = useState(0);
+    const handleClick = (e) => {
+        const index = parseInt(e.target.id, 0);
+        if (index !== active) {
+          setActive(index);
+        }
+      };
+
     const checkIfSiteContainsChemicals = (site) => {
        let currentTotalInventory = 0;
-        if(ticket.site === 'site1'){
-            site1Stock.forEach(warehouse => {
-                currentTotalInventory = warehouse.current_stock + currentTotalInventory
-            })
-        }
+       if(site=== "site1"){
+           site1Stock.forEach(warehouse => {
+               currentTotalInventory = warehouse.current_stock + currentTotalInventory
+           })
+       }else{
+           site2Stock.forEach(warehouse => {
+               currentTotalInventory = warehouse.current_stock + currentTotalInventory
+           })
+       }
+        
         if(currentTotalInventory >= ticket.totalAmount){
             return true
         }else {
@@ -31,10 +45,13 @@ const AddTicket = () => {
 
     const checkIfSpaceAtSite = (site) => {
         let totalSiteCapacity = 0;
-        if(ticket.site === 'site1'){
+        if(site === "site2"){
             site1Stock.forEach(warehouse => {
-                // console.log(warehouse.capacity)
-                totalSiteCapacity = warehouse.capacity + totalSiteCapacity
+                 totalSiteCapacity = warehouse.capacity + totalSiteCapacity
+            })
+        }else{
+            site2Stock.forEach(warehouse => {
+                 totalSiteCapacity = warehouse.capacity + totalSiteCapacity
             })
         }
         // console.log(totalSiteCapacity ,ticket.totalAmount)
@@ -66,12 +83,13 @@ const AddTicket = () => {
         }
     }
     
-    const findWarehousesForDispatch = (site) => {
+    const findWarehousesForDispatch = () => {
         let aWarehousesToRemoveFrom = []
         let warehouses;
-        if(site === "site1"){
+        if(ticket.site === "site1"){
             warehouses = site1Stock
         }else{
+            console.log('site2')
             warehouses = site2Stock
         }
         let ticketTemp = ticket
@@ -125,7 +143,7 @@ const AddTicket = () => {
             warehouses = site2Stock
         }
         for(let i = 0; i< amount; i++){
-            const warehouseToStore = site1Stock.find((warehouse, index) => {
+            const warehouseToStore = warehouses.find((warehouse, index) => {
                 console.log('os', warehouse.chemicalInventory)
                 const chemicalsAllowed= processWarehouseInventory(warehouse).chemicalsAllowed
                 let remainingStorage = processWarehouseInventory(warehouse).remainingStorage
@@ -198,7 +216,7 @@ const AddTicket = () => {
             console.log(aWarehousesToStore)
        return aWarehousesToStore
     }
-    const findWarehousesForDelivery = (site) => {
+    const findWarehousesForDelivery = () => {
         let placementArray = []
         let ticketTemp = ticket
         // console.log('amount', amount)
@@ -221,7 +239,7 @@ const AddTicket = () => {
         if(ticket.type === 'O'){
            if(checkIfSiteContainsChemicals(ticket.site)){
                console.log('enough')
-               const placementArray = findWarehousesForDispatch(ticket.site)
+               const placementArray = findWarehousesForDispatch()
                if(placementArray){
                    console.log(placementArray)
                    setJob({status:'inProcess', type: ticket.type, placementArray}) 
@@ -238,7 +256,7 @@ const AddTicket = () => {
          if(ticket.type === 'I'){
            if(checkIfSpaceAtSite(ticket.site)){
                console.log('space')
-               const placementArray = findWarehousesForDelivery(ticket.site)
+               const placementArray = findWarehousesForDelivery()
                if(placementArray){
                 console.log(placementArray)
                 setJob({status:'inProcess', type: ticket.type, placementArray}) 
@@ -253,12 +271,7 @@ const AddTicket = () => {
                setTicket({...ticket, status: 'Denied'})
            }
         }
-        // check if outgoing or incoming
-        // check if space or enough inventory on site
-        // check if warehouses can handle stock
-        // if so raise job -> else deny ticket
-        // if job is raised, refetch stock, do individual checks at warehouses
-        //      if all is good post to database
+        
         console.log(site1Stock)
 
     }
@@ -352,7 +365,17 @@ const AddTicket = () => {
 //     console.log(site2Stock)
     return(
         <div>
-            <h1>Process ticket</h1>
+        <Tabs className="tabs">
+            <Tab onClick={handleClick} active={active === 0} id={0}>
+            Site 1
+            </Tab>
+
+            <Tab onClick={handleClick} active={active === 1} id={1}>
+            Site 2
+            </Tab>
+        </Tabs> 
+      <Content active={active === 0}>
+            <h1>Process ticket at Site 1</h1>
             <form>
             {ticket? <h2>Ticket: {ticket.status}</h2>: null}  
             {job? <h2>Job: {job.status}</h2>: null}  
@@ -360,7 +383,7 @@ const AddTicket = () => {
                 <label>
                    <p>Select type of Ticket</p> 
                     <select name="type" value={ticketType} onChange={(e)=>setTicketType(e.target.value)}>
-                        <option value="null">Select Ticket Type</option>
+                        <option disabled="disabled" selected hidden>Select Ticket Type</option>
                         <option value="O">Dispatch</option>
                         <option value="I">Delivery</option>
                     </select>
@@ -368,7 +391,7 @@ const AddTicket = () => {
                 <label>
                     <p>Select type of Chemical</p>
                     <select name="chemical1" value={chemical1} onChange={(e)=>setChemical1(e.target.value)}>
-                        <option value="null">Select Chemical</option>
+                        <option disabled="disabled" selected hidden>Select Chemical</option>
                         <option value="A">A</option>
                         <option value="B">B</option>
                         <option value="C">C</option>
@@ -376,12 +399,12 @@ const AddTicket = () => {
                 </label>
                 <label>
                <p> Amount</p>
-                    <input type="number" name="amount1" onChange={(e)=>{console.log(e.target.value);setChemicalAmount1(e.target.value)}}/>
+                    <input type="number" name="amount1" placeholder="type in amount" onChange={(e)=>{console.log(e.target.value);setChemicalAmount1(e.target.value)}}/>
                 </label>
                 <label>
                    <p> Select type of Chemical</p>
                     <select name="chemical2" value={chemical2}onChange={(e)=>setChemical2(e.target.value)}>
-                        <option value="null">Select Chemical</option>
+                        <option disabled="disabled" selected hidden>Select Chemical</option>
                         <option value="A">A</option>
                         <option value="B">B</option>
                         <option value="C">C</option>
@@ -389,11 +412,55 @@ const AddTicket = () => {
                 </label>
                 <label>
                 <p>Amount</p>
-                    <input type="number" name="amount2" onChange={(e)=>setChemicalAmount2(e.target.value)}/>
+                    <input type="number" name="amount2" placeholder="type in amount" onChange={(e)=>setChemicalAmount2(e.target.value)}/>
                 </label>
             <button onClick={(e)=>handleSubmit(e, "site1")}>Process Ticket</button>
             </form>
-            
+            </Content>
+
+            <Content active={active === 1}>
+            <h1>Process ticket at Site 2</h1>
+            <form className="formSite2">
+            {ticket? <h2>Ticket: {ticket.status}</h2>: null}  
+            {job? <h2>Job: {job.status}</h2>: null}  
+                <h3>Fill in ticket information</h3>
+                <label>
+                   <p>Select type of Ticket</p> 
+                    <select name="type" value={ticketType} onChange={(e)=>setTicketType(e.target.value)}>
+                        <option disabled="disabled" selected hidden>Select Ticket Type</option>
+                        <option value="O">Dispatch</option>
+                        <option value="I">Delivery</option>
+                    </select>
+                </label>
+                <label>
+                    <p>Select type of Chemical</p>
+                    <select name="chemical1" value={chemical1} onChange={(e)=>setChemical1(e.target.value)}>
+                        <option disabled="disabled" selected hidden>Select Chemical</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                </label>
+                <label>
+               <p> Amount</p>
+                    <input type="number" placeholder="type in amount" name="amount1" onChange={(e)=>{console.log(e.target.value);setChemicalAmount1(e.target.value)}}/>
+                </label>
+                <label>
+                   <p> Select type of Chemical</p>
+                    <select name="chemical2" value={chemical2}onChange={(e)=>setChemical2(e.target.value)}>
+                        <option disabled="disabled" selected hidden>Select Chemical</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                </label>
+                <label>
+                <p>Amount</p>
+                    <input type="number" name="amount2" placeholder="type in amount" onChange={(e)=>setChemicalAmount2(e.target.value)}/>
+                </label>
+            <button onClick={(e)=>handleSubmit(e, "site2")}>Process Ticket</button>
+            </form>
+            </Content>
         </div>
     )
 }

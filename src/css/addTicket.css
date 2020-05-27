@@ -6,20 +6,27 @@ form{
     margin:auto;
 }
 label {
- margin:1%;
+ margin:1% 0;
 }
 label p{
     padding:0;
     margin:0;
 }
 input, select {
+    box-sizing: border-box;
     width: 20rem;
     margin:0;
     padding: 10px;
     border:1px solid #D2D5DD;
-
 }
 
 button{
     color:white;
+    margin: 3% 0;
+}
+.tabs button{
+    color:black;
+}
+.formSite2{
+    background:#D2D5DD;
 }

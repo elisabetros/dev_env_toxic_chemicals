@@ -12,6 +12,7 @@ export const Tabs = styled.div`
 export const Tab = styled.button`
   border: none;
   outline: none;
+  color:black;
   cursor: pointer;
   width: 45%;
   margin:0 1%;
