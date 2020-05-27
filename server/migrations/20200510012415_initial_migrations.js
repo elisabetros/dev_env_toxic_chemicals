@@ -5,10 +5,6 @@ exports.up = function (knex) {
       table.integer("capacity").unsigned();
       table.integer("current_stock").unsigned();
     })
-    .createTable('site', (table) => {
-      table.increments("id").primary().unsigned().notNullable();
-      table.string('name')
-    })
     .createTable("job", (table) => {
       table.bigIncrements("id").primary().unsigned().notNullable();
       table.string("type", 1).notNullable();

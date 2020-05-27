@@ -24,8 +24,6 @@ const knex = Knex(knexFile.development)
 Model.knex(knex)
 
 
-const Warehouse = require('./models/Warehouse')
-const WarehouseItem = require('./models/WarehouseItem')
 
 // ROUTES
 const warehouseRoute = require('./routes/warehouses')

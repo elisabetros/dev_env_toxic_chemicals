@@ -11,6 +11,7 @@ import StartPage from "../StartPage";
 import Warehouses from "../Warehouses";
 import Statistic from "../Statistic";
 import Search from "../Search";
+import AddTicket from "../AddTicket";
 
 export default function Aside() {
   return (
@@ -30,9 +31,9 @@ export default function Aside() {
               <NavLink to="/search" activeClassName="active">
                 Search
               </NavLink>
-              {/* <NavLink to="/statistics" activeClassName="active">
-                Statistics
-              </NavLink> */}
+              <NavLink to="/addTicket" activeClassName="active">
+                Process Ticket
+              </NavLink>
           </ul>
         </nav>
 
@@ -46,9 +47,9 @@ export default function Aside() {
           <Route path="/search">
             <Search />
           </Route>
-          {/* <Route path="/statistics">
-            <Statistic />
-          </Route> */}
+          <Route path="/addTicket">
+            <AddTicket />
+          </Route>
           <Route path="/">
             <StartPage />
           </Route>

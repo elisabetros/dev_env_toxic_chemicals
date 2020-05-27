@@ -12,12 +12,7 @@ router.post('/processJob', async (req, res) => {
     console.log(job )
     let siteID;
     let newJob
-    let jobType
-    if(job.type === 'outgoing'){
-        jobType = 'O'
-    }else{
-        jobType = 'I'
-    }
+
     if(job.placementArray[0].warehouse <= 5){
         siteID = 1
     }else{
@@ -26,7 +21,7 @@ router.post('/processJob', async (req, res) => {
     console.log(siteID)
     try{
         newJob = await Job.query().insert({
-            type:jobType,
+            type:job.type,
             site_id: siteID        
         })
         console.log(newJob.id)
@@ -39,7 +34,7 @@ router.post('/processJob', async (req, res) => {
                 job_id: newJob.id,
                 warehouse_id: item.warehouse
             })
-            if(job.type === 'outgoing'){
+            if(job.type === 'O'){
                 await WarehouseItem.query().decrement('amount', item.amount)
                 .where('warehouse_id', item.warehouse).andWhere('chemical', item.chemical)
                  await Warehouse.query().decrement('current_stock', item.amount)
@@ -60,7 +55,7 @@ router.post('/processJob', async (req, res) => {
                 .where('id', item.warehouse)
             }
             await Audit.query().insert({
-                type: jobType,
+                type: job.type,
                 chemical: item.chemical,
                 warehouse_id: item.warehouse,
                 site_id: siteID,
