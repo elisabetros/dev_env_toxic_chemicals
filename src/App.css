@@ -25,4 +25,9 @@ h2{
 
 body{
   margin-bottom: 5%;
+  
+  color:#333745;
+}
+.main-header{
+  margin-left:5%;
 }

@@ -374,16 +374,18 @@ const AddTicket = () => {
             Site 2
             </Tab>
         </Tabs> 
-      <Content active={active === 0}>
+      <Content active={active === 0} className="contentSite1">
             <h1>Process ticket at Site 1</h1>
+                <div className="update">
+                    {ticket? <h2>Ticket: {ticket.status}</h2>: null}  
+                    {job? <h2>Job: {job.status}</h2>: null}  
+                </div>
             <form>
-            {ticket? <h2>Ticket: {ticket.status}</h2>: null}  
-            {job? <h2>Job: {job.status}</h2>: null}  
                 <h3>Fill in ticket information</h3>
                 <label>
                    <p>Select type of Ticket</p> 
                     <select name="type" value={ticketType} onChange={(e)=>setTicketType(e.target.value)}>
-                        <option disabled="disabled" selected hidden>Select Ticket Type</option>
+                        <option value="null">Select Ticket Type</option>
                         <option value="O">Dispatch</option>
                         <option value="I">Delivery</option>
                     </select>
@@ -391,7 +393,7 @@ const AddTicket = () => {
                 <label>
                     <p>Select type of Chemical</p>
                     <select name="chemical1" value={chemical1} onChange={(e)=>setChemical1(e.target.value)}>
-                        <option disabled="disabled" selected hidden>Select Chemical</option>
+                        <option value="null">Select Chemical</option>
                         <option value="A">A</option>
                         <option value="B">B</option>
                         <option value="C">C</option>
@@ -404,7 +406,7 @@ const AddTicket = () => {
                 <label>
                    <p> Select type of Chemical</p>
                     <select name="chemical2" value={chemical2}onChange={(e)=>setChemical2(e.target.value)}>
-                        <option disabled="disabled" selected hidden>Select Chemical</option>
+                        <option value="null">Select Chemical</option>
                         <option value="A">A</option>
                         <option value="B">B</option>
                         <option value="C">C</option>
@@ -420,14 +422,16 @@ const AddTicket = () => {
 
             <Content active={active === 1}>
             <h1>Process ticket at Site 2</h1>
+                <div className="update">
+                    {ticket? <h2>Ticket: {ticket.status}</h2>: null}  
+                    {job? <h2>Job: {job.status}</h2>: null}  
+                </div>
             <form className="formSite2">
-            {ticket? <h2>Ticket: {ticket.status}</h2>: null}  
-            {job? <h2>Job: {job.status}</h2>: null}  
                 <h3>Fill in ticket information</h3>
                 <label>
                    <p>Select type of Ticket</p> 
                     <select name="type" value={ticketType} onChange={(e)=>setTicketType(e.target.value)}>
-                        <option disabled="disabled" selected hidden>Select Ticket Type</option>
+                        <option value="null">Select Ticket Type</option>
                         <option value="O">Dispatch</option>
                         <option value="I">Delivery</option>
                     </select>
@@ -435,7 +439,7 @@ const AddTicket = () => {
                 <label>
                     <p>Select type of Chemical</p>
                     <select name="chemical1" value={chemical1} onChange={(e)=>setChemical1(e.target.value)}>
-                        <option disabled="disabled" selected hidden>Select Chemical</option>
+                        <option value="null">Select Chemical</option>
                         <option value="A">A</option>
                         <option value="B">B</option>
                         <option value="C">C</option>
@@ -448,7 +452,7 @@ const AddTicket = () => {
                 <label>
                    <p> Select type of Chemical</p>
                     <select name="chemical2" value={chemical2}onChange={(e)=>setChemical2(e.target.value)}>
-                        <option disabled="disabled" selected hidden>Select Chemical</option>
+                        <option value="null">Select Chemical</option>
                         <option value="A">A</option>
                         <option value="B">B</option>
                         <option value="C">C</option>

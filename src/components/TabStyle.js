@@ -18,7 +18,7 @@ export const Tab = styled.button`
   margin:0 1%;
   position: relative;
   font-size: 1em;
-  border: ${(props) => (props.active ? "1px solid #ccc" : "")};
+  border: ${(props) => (props.active ? "1px solid #D2D5DD" : "")};
   border-bottom: ${(props) => (props.active ? "none" : "")};
   background-color: ${(props) => (props.active ? "white" : "lightgray")};
   height: ${(props) => (props.active ? "3em" : "2.6em; top:.4em")};
