@@ -15,13 +15,14 @@ let ticket3 = new Ticket('incoming', {'C':7})
 let ticket4 = new Ticket('outgoing', {'C':4})
 let ticket5 = new Ticket('outgoing', {'A':2})
 let ticket6 = new Ticket('incoming', {'B':5, 'C':2})
+let ticket7 = new Ticket('outgoing', {'B':2, 'C':1})
 
 let aWarehouses = []
 let aWarehouses1 = []
 
 
 const fetchWarehouses = async () => {
-    const response = await axios('http://localhost/warehouses')
+    const response = await axios('https://toxic-chemicals-devenv.herokuapp.com/warehouses')
     const warehouses = await response.data
     // console.log(warehouses)
     warehouses.forEach(warehouse => {
@@ -59,7 +60,7 @@ const assignWarehouses = async () =>{
 
 
 const fetchWarehouseStock = async (id) => {
-        const response = await axios(`http://localhost/currentstock/${id}`)
+        const response = await axios(`https://toxic-chemicals-devenv.herokuapp.com/currentstock/${id}`)
         const warehouseStock = await response.data
         let stockObj = {}
         // console.log('wares', warehouseStock)
@@ -124,7 +125,7 @@ const createData = async (site, ticket) => {
          if(!isWarehouseAvailable.includes(false)){
              console.log('true')
         //     //  TODO: send job to db, and update warehouses 
-            const response = await axios.post(`http://localhost/processJob`, {job})
+            const response = await axios.post(`https://toxic-chemicals-devenv.herokuapp.com/processJob`, {job})
             console.log(response)
             console.log('yes')
          }else{
@@ -144,10 +145,12 @@ const createData = async (site, ticket) => {
 // createData(site2, ticket3)
 // createData(site2, ticket4)
 // createData(site2, ticket6)
-createData(site2, ticket1)
+// createData(site2, ticket7)
+// createData(site2, ticket1)
 // createData(site1, ticket1)
 // createData(site1, ticket2)
 // createData(site1, ticket3)
 // createData(site1, ticket4)
 // createData(site1, ticket5)
 // createData(site1, ticket6)
+// createData(site1, ticket7)

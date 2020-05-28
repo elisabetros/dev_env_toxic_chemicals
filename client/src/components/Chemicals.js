@@ -9,17 +9,17 @@ export default function Chemicals() {
   // const [loading, setLoading] = useState(false);
   const[ jobs, setJobs ] = useState()
   const [selectLabelsDelivered, setselectLabelsDelivered] = useState([
-    { label: "total", value: "total" },
-    { label: "today", value: "today" },
-    { label: "week", value: "week" },
-    { label: "month", value: "month" },
+    { label: "Total", value: "Total" },
+    { label: "Today", value: "Today" },
+    { label: "Week", value: "Week" },
+    { label: "Month", value: "Month" },
   ]);
 
   const [selectLabelsDispatched, setSelectLabelsDispatched] = useState([
-    { label: "total", value: "total" },
-    { label: "today", value: "today" },
-    { label: "week", value: "week" },
-    { label: "month", value: "month" },
+    { label: "Total", value: "Total" },
+    { label: "Today", value: "Today" },
+    { label: "Week", value: "Week" },
+    { label: "Month", value: "Month" },
   ]);
 
   const [deliveryForChart, setDeliveryForChart] = useState({});
@@ -129,29 +129,29 @@ export default function Chemicals() {
       })
       if(isFetching){
         setDeliveredByTypes([
-          {A:incoming.today.A, B:incoming.today.B, C:incoming.today.C, desc:'today', total:incoming.today.total},
-          {A:incoming.total.A, B:incoming.total.B, C:incoming.total.C, desc:'total',total:incoming.total.total}, 
-          {A:incoming.week.A, B:incoming.week.B, C:incoming.week.C, desc:'week', total:incoming.week.total},
-          {A:incoming.month.A, B:incoming.month.B, C:incoming.month.C, desc:'month', total:incoming.month.total}
+          {A:incoming.today.A, B:incoming.today.B, C:incoming.today.C, desc:'Today', total:incoming.today.total},
+          {A:incoming.total.A, B:incoming.total.B, C:incoming.total.C, desc:'Total',total:incoming.total.total}, 
+          {A:incoming.week.A, B:incoming.week.B, C:incoming.week.C, desc:'Week', total:incoming.week.total},
+          {A:incoming.month.A, B:incoming.month.B, C:incoming.month.C, desc:'Month', total:incoming.month.total}
         ])
         setDispatchedByTypes([
-          {A:dispatched.today.A, B:dispatched.today.B, C:dispatched.today.C, desc:'today', total:dispatched.today.total},
-          {A:dispatched.total.A, B:dispatched.total.B, C:dispatched.total.C, desc:'total',total:dispatched.total.total}, 
-          {A:dispatched.week.A, B:dispatched.week.B, C:dispatched.week.C, desc:'week', total:dispatched.week.total},
-          {A:dispatched.month.A, B:dispatched.month.B, C:dispatched.month.C, desc:'month', total:dispatched.month.total}
+          {A:dispatched.today.A, B:dispatched.today.B, C:dispatched.today.C, desc:'Today', total:dispatched.today.total},
+          {A:dispatched.total.A, B:dispatched.total.B, C:dispatched.total.C, desc:'Total',total:dispatched.total.total}, 
+          {A:dispatched.week.A, B:dispatched.week.B, C:dispatched.week.C, desc:'Week', total:dispatched.week.total},
+          {A:dispatched.month.A, B:dispatched.month.B, C:dispatched.month.C, desc:'Month', total:dispatched.month.total}
           
         ])
         setDeliveryForChart({
           A: incoming.total.A,
           B: incoming.total.B,
           C: incoming.total.C,
-          desc:'total',
+          desc:'Total',
           total: incoming.total.total})
         setDispatchForChart({
           A: dispatched.total.A,
           B: dispatched.total.B,
           C: dispatched.total.C,
-          desc:'total',
+          desc:'Total',
           total: dispatched.total.total})
       }
       // console.log(incoming, dispatched)

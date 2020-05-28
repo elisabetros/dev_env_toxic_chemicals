@@ -21,7 +21,7 @@ router.post('/processJob', async (req, res) => {
     console.log(siteID)
     try{
         newJob = await Job.query().insert({
-            type:job.type,
+            type:toUpperCase(job.type),
             site_id: siteID        
         })
         console.log(newJob.id)
@@ -34,7 +34,7 @@ router.post('/processJob', async (req, res) => {
                 job_id: newJob.id,
                 warehouse_id: item.warehouse
             })
-            if(job.type === 'O'){
+            if(toUpperCase(job.type) === 'O'){
                 await WarehouseItem.query().decrement('amount', item.amount)
                 .where('warehouse_id', item.warehouse).andWhere('chemical', item.chemical)
                  await Warehouse.query().decrement('current_stock', item.amount)

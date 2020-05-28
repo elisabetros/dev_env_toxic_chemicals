@@ -19,38 +19,38 @@ export default function Aside() {
       <div>
         <nav className="aside">
           <ul>
-              <NavLink to="/" exact={true} activeClassName="active">
+              <NavLink to="/toxic_chemicals" exact={true} activeClassName="active">
                 Start page
               </NavLink>
-              <NavLink to="/chemicals" activeClassName="active">
+              <NavLink to="/toxic_chemicals/chemicals" activeClassName="active">
                 Chemicals
               </NavLink>
-              <NavLink to="/warehouses" activeClassName="active">
+              <NavLink to="/toxic_chemicals/warehouses" activeClassName="active">
                 Warehouses
               </NavLink>
-              <NavLink to="/search" activeClassName="active">
+              <NavLink to="/toxic_chemicals/search" activeClassName="active">
                 Search
               </NavLink>
-              <NavLink to="/addTicket" activeClassName="active">
+              <NavLink to="/toxic_chemicals/addTicket" activeClassName="active">
                 Process Ticket
               </NavLink>
           </ul>
         </nav>
 
         <Switch>
-          <Route path="/chemicals">
+          <Route path="/toxic_chemicals/chemicals">
             <Chemicals />
           </Route>
-          <Route path="/warehouses">
+          <Route path="/toxic_chemicals/warehouses">
             <Warehouses />
           </Route>
-          <Route path="/search">
+          <Route path="/toxic_chemicals/search">
             <Search />
           </Route>
-          <Route path="/addTicket">
+          <Route path="/toxic_chemicals/addTicket">
             <AddTicket />
           </Route>
-          <Route path="/">
+          <Route exact path="/toxic_chemicals">
             <StartPage />
           </Route>
         </Switch>
