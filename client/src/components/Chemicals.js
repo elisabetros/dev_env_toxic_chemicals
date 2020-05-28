@@ -80,7 +80,7 @@ export default function Chemicals() {
     let isFetching = true;
     
     const fetchjobItems = async () => {
-      const jobs = await axios('http://localhost/jobsWithJobItems')
+      const jobs = await axios('https://toxic-chemicals-devenv.herokuapp.com/jobsWithJobItems')
       
       let incoming = {today:{A:0,B:0,C:0, total:0}, total:{A:0,B:0,C:0, total:0}, week:{A:0,B:0,C:0, total:0}, month:{A:0,B:0,C:0, total:0}}
       let dispatched = {today:{A:0,B:0,C:0, total:0}, total:{A:0,B:0,C:0, total:0}, week:{A:0,B:0,C:0, total:0}, month:{A:0,B:0,C:0, total:0}}

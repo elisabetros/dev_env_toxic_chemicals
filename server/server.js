@@ -26,6 +26,7 @@ Model.knex(knex)
 
 
 // ROUTES
+
 const warehouseRoute = require('./routes/warehouses')
 const processJobRoute = require('./routes/processJob')
 const jobRoute = require('./routes/jobs')
@@ -35,22 +36,10 @@ app.use(warehouseRoute)
 app.use(processJobRoute)
 app.use(jobRoute)
 app.use(auditRoute)
+
 // ////////////////
 
 
-// if (process.env.NODE_ENV === "production") {
-//   //Set static folder
-//   app.use(express.static("build"));
-
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.resolve(__dirname, "build", "index.html"));
-//   });
-// }
-// app.get('/', async (req, res) => {  
-//   const result = await ChemicalStock.query().withGraphFetched("warehouse").orderBy('nWarehouseID');
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.send(result)
-// })
 
 const port = process.env.PORT || 80
 

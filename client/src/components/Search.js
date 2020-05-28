@@ -130,7 +130,7 @@ export default function Search() {
     let site2CCounter = 0;
     let action;
     const fetchJobs = async () => {
-      const jobs = await axios('http://localhost/jobsWithJobItems')
+      const jobs = await axios('https://toxic-chemicals-devenv.herokuapp.com/jobsWithJobItems')
       console.log(jobs.data)
       jobs.data.forEach(job => {
         if(job.type === 'I'){

@@ -314,8 +314,8 @@ const AddTicket = () => {
     useEffect(() => {
         let isFetching = true
         const fetchAllStock = async () => {
-            const responseSite1 = await axios(`http://localhost/warehousesWithStock/site1`)
-            const responseSite2 = await axios(`http://localhost/warehousesWithStock/site2`)
+            const responseSite1 = await axios(`https://toxic-chemicals-devenv.herokuapp.com/warehousesWithStock/site1`)
+            const responseSite2 = await axios(`https://toxic-chemicals-devenv.herokuapp.com/warehousesWithStock/site2`)
             responseSite1.data.map(warehouse => {               
                warehouse.chemicalInventory = setChemicalInventory(warehouse)
                 delete warehouse.warehouseitem
@@ -334,7 +334,7 @@ const AddTicket = () => {
         }
         const fetchPostJob = async () => {
             try{
-                const response = await axios.post(`http://localhost/processJob`, {job})
+                const response = await axios.post(`https://toxic-chemicals-devenv.herokuapp.com/processJob`, {job})
                 console.log(response.data)
                 if(response.data.response){
                 setJob({...job, status: 'Confirmed'})

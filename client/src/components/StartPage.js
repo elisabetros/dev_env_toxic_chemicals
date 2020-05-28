@@ -25,7 +25,7 @@ export default function StartPage() {
     let isFetching = true
    const fetchJobs = async () => {
       console.log('fetch jobs')
-      const jobs = await axios('http://localhost/job')
+      const jobs = await axios('https://toxic-chemicals-devenv.herokuapp.com/job')
       console.log(jobs.data)
       let dateArray = jobs.data.map((job, index)=> {
         let date = new Date(job.date)
@@ -58,7 +58,7 @@ export default function StartPage() {
     }
 
     async function fetchWarehouseStock(){
-      const response = await axios('http://localhost/allstock')
+      const response = await axios('https://toxic-chemicals-devenv.herokuapp.com/allstock')
       // console.log(response.data)
       let chemicalCounterSite1 = 0;
       let chemicalCounterSite2 = 0;

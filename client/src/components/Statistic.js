@@ -6,7 +6,7 @@ export default function Statistic() {
   useEffect(() => {
 
     const fetchAuditData = async () => {
-      const auditData = await axios('http://localhost/auditData')
+      const auditData = await axios('https://toxic-chemicals-devenv.herokuapp.com/auditData')
       console.log(auditData.data)
     }
 

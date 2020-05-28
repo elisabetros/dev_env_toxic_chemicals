@@ -13,7 +13,7 @@ export default function Warehouses() {
   useEffect(() =>{
     let isFetching = true
     const fetchData = async () => {
-    const response = await axios('http://localhost/warehouses')
+    const response = await axios('https://toxic-chemicals-devenv.herokuapp.com/warehouses')
     
     const warehouses = response.data
     for await (let warehouse of warehouses){
@@ -33,7 +33,7 @@ console.log(isLoading)
 
 
   const fetchWarehouseStock = async (id) => {
-    const response = await axios(`http://localhost/currentstock/${id}`)
+    const response = await axios(`https://toxic-chemicals-devenv.herokuapp.com/currentstock/${id}`)
     const warehouseStock = await response.data
     let stockObj = {}
     warehouseStock.map(stock => {
