@@ -14,7 +14,9 @@ const AddTicket = () => {
     const [site1Stock, setSite1Stock] = useState()
     const [site2Stock, setSite2Stock] = useState()
     const [job, setJob] = useState()
-    const [process, setProcess] = useState()
+    const [process, setProcess] = useState(false)
+
+    const [error, setError] = useState()
 
     const [active, setActive] = useState(0);
     const handleClick = (e) => {
@@ -75,10 +77,10 @@ const AddTicket = () => {
             }else if(warehouse.chemicalInventory.C){
                 chemicalsAllowed = ['A', 'B', 'C']
             }
-            console.log(warehouse.capacity - warehouse.current_stock, warehouse.chemicalInventory, warehouse.current_stock)
+            // console.log(warehouse.capacity - warehouse.current_stock, warehouse.chemicalInventory, warehouse.current_stock)
             return {chemicalsAllowed, remainingStorage: warehouse.capacity - warehouse.current_stock}
         }else{
-            console.log(warehouse.capacity - warehouse.current_stock)
+            // console.log(warehouse.capacity - warehouse.current_stock)
             return {chemicalsAllowed: ['A', 'B', 'C'], remainingStorage: warehouse.capacity - warehouse.current_stock}
         }
     }
@@ -247,10 +249,12 @@ const AddTicket = () => {
                    setProcess(false)
                }else{
                 setTicket({...ticket, status: 'Denied'})
+                clearPage()
                }  
              // not enough chemicals
            }else{
             setTicket({...ticket, status: 'Denied'})
+            clearPage()
            }
         }
          if(ticket.type === 'I'){
@@ -264,21 +268,36 @@ const AddTicket = () => {
                 setProcess(false)
                }else{
                 setTicket({...ticket, status: 'Denied'})
+                clearPage()
                } 
             //    not enough space at site
             }else{
                console.log('ticket denied')
                setTicket({...ticket, status: 'Denied'})
+               clearPage()
            }
         }
         
         console.log(site1Stock)
 
     }
+    const clearError = () => {
+        console.log('clear Error')
+        setTimeout(() => {
+            setError()
+            setProcess(false)
+            clearPage()
+        },2500)
+    }
     const handleSubmit = async (e, site) => {
+        // console.log('click')
         e.preventDefault()
+        // console.log(parseInt(chemicalAmount1), parseInt(chemicalAmount1))
+        
         if(ticketType && chemical1 && chemicalAmount1 && !chemical2){
-            await setTicket({
+          
+            console.log('continue', process)
+           setTicket({
                 'chemicals': {[chemical1]:parseInt(chemicalAmount1)},
                 'type': ticketType,
                 'totalAmount': parseInt(chemicalAmount1),
@@ -287,7 +306,8 @@ const AddTicket = () => {
             })
             setProcess(true)
         } else if(ticketType && chemical1 && chemicalAmount1 && chemical2 && chemicalAmount2){
-           await setTicket({
+          
+           setTicket({
                 'chemicals': {[chemical1]:parseInt(chemicalAmount1), [chemical2]: parseInt(chemicalAmount2)},
                 'type': ticketType,
                 'totalAmount': parseInt(chemicalAmount1)+parseInt(chemicalAmount2),
@@ -295,6 +315,9 @@ const AddTicket = () => {
                 site
             })
             setProcess(true)
+        }else{
+            setError('Please fill out form fields with ticket information correctly')
+            clearError()
         }
     }
 
@@ -311,8 +334,22 @@ const AddTicket = () => {
         return stockObj
     }
 
+    const clearPage = () => {
+        setTimeout(() => {
+            setJob(null)
+            setTicket(null)
+            setChemical1('')
+            setChemical2('')
+            setChemicalAmount1('')
+            setChemicalAmount2('')
+            setTicketType('')
+            setProcess(false)
+        },3000)
+    }
+
     useEffect(() => {
         let isFetching = true
+        console.log(isFetching)
         const fetchAllStock = async () => {
             const responseSite1 = await axios(`https://toxic-chemicals-devenv.herokuapp.com/warehousesWithStock/site1`)
             const responseSite2 = await axios(`https://toxic-chemicals-devenv.herokuapp.com/warehousesWithStock/site2`)
@@ -333,14 +370,19 @@ const AddTicket = () => {
             }
         }
         const fetchPostJob = async () => {
+            console.log(job)
+            console.log(site1Stock)
+            console.log(site2Stock)
             try{
+                // const response = await axios.post(`http://localhost/processJob`, {job})
                 const response = await axios.post(`https://toxic-chemicals-devenv.herokuapp.com/processJob`, {job})
                 console.log(response.data)
                 if(response.data.response){
-                setJob({...job, status: 'Confirmed'})
+                    setJob({...job, status: 'Confirmed'})
+                    clearPage()
                 }
             }catch(err){
-                if(err){console.log(err); return; }
+                if(err){console.log(err.response.data.error); return; }
             }
             
         }
@@ -349,7 +391,7 @@ const AddTicket = () => {
         if(ticket && !job){
             processTicket()
         }
-        if(job){
+        if(job && job.status === 'inProcess'){
             console.log('send job to db', job)
             console.log({...job.placementArray})
             fetchPostJob()
@@ -357,14 +399,14 @@ const AddTicket = () => {
         return () => isFetching = false
     }, [process])
 
-
 // if(ticket){
 //     console.log(ticket)
 // }
 //     console.log(site1Stock)
-//     console.log(site2Stock)
+    console.log(process, ticket, job)
     return(
         <div>
+            {error? <div className="error">{error}</div>: null}
         <Tabs className="tabs">
             <Tab onClick={handleClick} active={active === 0} id={0}>
             Site 1
@@ -380,7 +422,7 @@ const AddTicket = () => {
                     {ticket? <h2>Ticket: {ticket.status}</h2>: null}  
                     {job? <h2>Job: {job.status}</h2>: null}  
                 </div>
-            <form>
+            <form >
                 <h3>Fill in ticket information</h3>
                 <label>
                    <p>Select type of Ticket</p> 
@@ -401,11 +443,11 @@ const AddTicket = () => {
                 </label>
                 <label>
                <p> Amount</p>
-                    <input type="number" name="amount1" placeholder="type in amount" onChange={(e)=>{console.log(e.target.value);setChemicalAmount1(e.target.value)}}/>
+                    <input type="number" name="amount1" placeholder="type in amount" value={chemicalAmount1} onChange={(e)=>setChemicalAmount1(e.target.value)} />
                 </label>
                 <label>
                    <p> Select type of Chemical</p>
-                    <select name="chemical2" value={chemical2}onChange={(e)=>setChemical2(e.target.value)}>
+                    <select name="chemical2" value={chemical2} onChange={(e)=>setChemical2(e.target.value)}>
                         <option value="null">Select Chemical</option>
                         <option value="A">A</option>
                         <option value="B">B</option>
@@ -414,7 +456,7 @@ const AddTicket = () => {
                 </label>
                 <label>
                 <p>Amount</p>
-                    <input type="number" name="amount2" placeholder="type in amount" onChange={(e)=>setChemicalAmount2(e.target.value)}/>
+                    <input type="number" name="amount2" placeholder="type in amount" value={chemicalAmount2} onChange={(e)=>setChemicalAmount2(e.target.value)}/>
                 </label>
             <button onClick={(e)=>handleSubmit(e, "site1")}>Process Ticket</button>
             </form>
@@ -426,7 +468,7 @@ const AddTicket = () => {
                     {ticket? <h2>Ticket: {ticket.status}</h2>: null}  
                     {job? <h2>Job: {job.status}</h2>: null}  
                 </div>
-            <form className="formSite2">
+            <form className="formSite2" >
                 <h3>Fill in ticket information</h3>
                 <label>
                    <p>Select type of Ticket</p> 
@@ -447,7 +489,7 @@ const AddTicket = () => {
                 </label>
                 <label>
                <p> Amount</p>
-                    <input type="number" placeholder="type in amount" name="amount1" onChange={(e)=>{console.log(e.target.value);setChemicalAmount1(e.target.value)}}/>
+                    <input type="number" placeholder="type in amount" name="amount1" value={chemicalAmount1} onChange={(e)=>{console.log(e.target.value);setChemicalAmount1(e.target.value)}}/>
                 </label>
                 <label>
                    <p> Select type of Chemical</p>
@@ -460,7 +502,7 @@ const AddTicket = () => {
                 </label>
                 <label>
                 <p>Amount</p>
-                    <input type="number" name="amount2" placeholder="type in amount" onChange={(e)=>setChemicalAmount2(e.target.value)}/>
+                    <input type="number" name="amount2" placeholder="type in amount" value={chemicalAmount2} onChange={(e)=>setChemicalAmount2(e.target.value)}/>
                 </label>
             <button onClick={(e)=>handleSubmit(e, "site2")}>Process Ticket</button>
             </form>

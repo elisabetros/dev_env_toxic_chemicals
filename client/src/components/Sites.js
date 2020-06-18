@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 // import { Tabs, useTabState, usePanelState } from "@bumaga/tabs";
 import { Tabs, Tab, Content } from "./TabStyle";
-import "../css/search.css";
+import "../css/sites.css";
 import Datepicker from "./datePicker/DatePicker";
 import Accordion from "./Accordion";
 import * as moment from "moment";
@@ -239,7 +239,7 @@ export default function Search() {
 
   
     if(!site1ForDisplay || !site2ForDisplay){
-      return(<div>Loading...</div>)
+      return(<div className="loading">Loading...</div>)
     }
     console.log(site1DetailedData, site2DetailedData)
     return (
@@ -308,9 +308,9 @@ export default function Search() {
             <button onClick={clearFilters}>Clear all filters</button>
             <button onClick={() => sortByWarehouse(site2ForDisplay)}>Sort by warehouse</button>
             <button onClick={() => sortByDate(site2ForDisplay)}>Sort by date</button>
-            <button onClick={() => sortByChemical('A', site2DetailedData)}>Show all A</button>
-            <button onClick={() => sortByChemical('B', site2DetailedData)}>Show all B</button>
-            <button onClick={() => sortByChemical('C', site2DetailedData)}>Show all C</button>
+            <button onClick={() => sortByChemical('A', site2DetailedData)}>Show all A chemicals</button>
+            <button onClick={() => sortByChemical('B', site2DetailedData)}>Show all B chemicals</button>
+            <button onClick={() => sortByChemical('C', site2DetailedData)}>Show all C chemicals</button>
             <button onClick={() => sortByJobType('delivered', site2DetailedData)}>Show all delivered</button>
             <button onClick={() => sortByJobType('dispatched', site2DetailedData)}>Show all dispatched</button>
           </div>

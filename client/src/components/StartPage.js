@@ -4,7 +4,7 @@ import "../css/startPage.css";
 import axios from 'axios'
 
 export default function StartPage() {
-  const [alerts, setAlerts] = useState({alerts: [ ]});
+  const [alerts, setAlerts] = useState([]);
   const [jobsDone, setJobDone] = useState()
   const [ allJobsDone, setAllJobsDone ] = useState()
 
@@ -71,10 +71,10 @@ export default function StartPage() {
         }
         if(isFetching){
           if(chemicalCounterSite2 >= 15){
-            setAlerts(state => [...state, {reason: "More than 15 A", site: "2"}])
+            setAlerts([...alerts, {reason: "More than 15 A", site: "2"}])
           }
           if(chemicalCounterSite1 >= 15){
-            setAlerts(state => [...state, {reason: "More than 15 A", site: "1"}])
+            setAlerts([...alerts, {reason: "More than 15 A", site: "1"}])
           }
         }
       })
@@ -96,8 +96,8 @@ export default function StartPage() {
   ]);
 
   //by default last 6 days are shown, on select can change to a month
-
-  const getAlerts = alerts.alerts.map((alert, i) => (
+console.log(alerts)
+  const getAlerts = alerts.map((alert, i) => (
     <div className="notification" key={i}>
       <p className="notify"> </p>
       {alert.reason} at site #{alert.site}
@@ -136,9 +136,13 @@ export default function StartPage() {
       setJobDone(allJobsDone);
     }
   };
-
+  
+if(!jobsDone){
+  return<div className="loading">Loading...</div>
+}
   return (
     <>
+   
       <div>
         <h1> Completed Jobs</h1>
         <div className="container-start-page">

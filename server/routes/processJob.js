@@ -21,7 +21,7 @@ router.post('/processJob', async (req, res) => {
     console.log(siteID)
     try{
         newJob = await Job.query().insert({
-            type:toUpperCase(job.type),
+            type:job.type.toUpperCase(),
             site_id: siteID        
         })
         console.log(newJob.id)
@@ -34,7 +34,7 @@ router.post('/processJob', async (req, res) => {
                 job_id: newJob.id,
                 warehouse_id: item.warehouse
             })
-            if(toUpperCase(job.type) === 'O'){
+            if(job.type.toUpperCase() === 'O'){
                 await WarehouseItem.query().decrement('amount', item.amount)
                 .where('warehouse_id', item.warehouse).andWhere('chemical', item.chemical)
                  await Warehouse.query().decrement('current_stock', item.amount)
@@ -65,7 +65,7 @@ router.post('/processJob', async (req, res) => {
         return res.send({response: 'success'})
     }catch(err){
         if(err){console.log(err); 
-            return res.send({error: 'could not update db'}); }
+            return res.send({error:err}); }
     }
     
 

@@ -76,11 +76,15 @@
     background-color: dimgrey;
   }
  
+  .buttonWrapper button:hover{
+    background-color: #1B998B;
+  }
   .buttonWrapper button{
     color:white;
     margin:0;
-    border:1px solid black;
+    border-bottom:1.5px solid #fff;
     text-align: left;
+    transition: all .3s;
   }
   
   .buttonWrapper{

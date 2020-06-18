@@ -31,3 +31,40 @@ body{
 .main-header{
   margin-left:5%;
 }
+
+.loading{
+  background: white;
+  position: fixed;
+  top:10vh;
+  left:0;
+  right:0;
+  bottom:0;
+  display: grid;
+  font-weight: 900;
+  letter-spacing: 1px;
+  font-size: 150%;
+  text-align: center;
+  align-items: center;
+}
+
+body{
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+
+.error{
+  position: fixed;
+  top:20vh;
+  border: 2px solid red;
+  background-color: white;
+z-index: 100;
+left:0;
+right:0;
+width: 40vw;
+  color:red;
+  text-align: center;
+  font-size: 110%;
+  margin: auto;
+  padding :5%;
+}

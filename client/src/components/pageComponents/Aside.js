@@ -9,18 +9,20 @@ import {
 import Chemicals from "../Chemicals";
 import StartPage from "../StartPage";
 import Warehouses from "../Warehouses";
-import Statistic from "../Statistic";
-import Search from "../Search";
+import Sites from "../Sites";
 import AddTicket from "../AddTicket";
+
+import Header from "./Header";
 
 export default function Aside() {
   return (
-    <Router>
+    <Router >
       <div>
         <nav className="aside">
           <ul>
+              <li className="logo">Toxic Chemical <br/>Industries</li>
               <NavLink to="/toxic_chemicals" exact={true} activeClassName="active">
-                Start page
+                Home
               </NavLink>
               <NavLink to="/toxic_chemicals/chemicals" activeClassName="active">
                 Chemicals
@@ -28,15 +30,15 @@ export default function Aside() {
               <NavLink to="/toxic_chemicals/warehouses" activeClassName="active">
                 Warehouses
               </NavLink>
-              <NavLink to="/toxic_chemicals/search" activeClassName="active">
-                Search
+              <NavLink to="/toxic_chemicals/sites" activeClassName="active">
+                Sites
               </NavLink>
               <NavLink to="/toxic_chemicals/addTicket" activeClassName="active">
                 Process Ticket
               </NavLink>
           </ul>
         </nav>
-
+        <Header />
         <Switch>
           <Route path="/toxic_chemicals/chemicals">
             <Chemicals />
@@ -44,8 +46,8 @@ export default function Aside() {
           <Route path="/toxic_chemicals/warehouses">
             <Warehouses />
           </Route>
-          <Route path="/toxic_chemicals/search">
-            <Search />
+          <Route path="/toxic_chemicals/sites">
+            <Sites />
           </Route>
           <Route path="/toxic_chemicals/addTicket">
             <AddTicket />

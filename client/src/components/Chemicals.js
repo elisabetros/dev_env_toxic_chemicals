@@ -84,10 +84,9 @@ export default function Chemicals() {
       
       let incoming = {today:{A:0,B:0,C:0, total:0}, total:{A:0,B:0,C:0, total:0}, week:{A:0,B:0,C:0, total:0}, month:{A:0,B:0,C:0, total:0}}
       let dispatched = {today:{A:0,B:0,C:0, total:0}, total:{A:0,B:0,C:0, total:0}, week:{A:0,B:0,C:0, total:0}, month:{A:0,B:0,C:0, total:0}}
-      let currDate = new Date().getDay()
+      let currDate = new Date().toISOString().slice(0,10)
       let month = new Date().getMonth()
       let currWeek = calculateWeek(new Date())
-
       jobs.data.forEach(job => {
         job.jobItem.forEach(item => {
           let jobDate = new Date(job.date).toISOString().slice(0,10)
@@ -99,7 +98,8 @@ export default function Chemicals() {
               incoming.month[item.chemical] = parseInt(incoming.month[item.chemical]) + parseInt(item.amount)
               incoming.month.total = parseInt(incoming.month.total) + parseInt(item.amount)
             }
-            if(currDate === new Date(job.date).getDay()){
+            if(currDate == jobDate){
+              console.log('same')
               incoming.today[item.chemical] = parseInt(incoming.today[item.chemical]) + parseInt(item.amount)
               incoming.today.total = parseInt(incoming.today.total) + parseInt(item.amount)
             }   
@@ -116,7 +116,7 @@ export default function Chemicals() {
               dispatched.month[item.chemical] = parseInt(dispatched.month[item.chemical]) + parseInt(item.amount)
               dispatched.month.total = parseInt(dispatched.month.total) + parseInt(item.amount)
             }
-            if(currDate === new Date(job.date).getDay()){
+            if(currDate === jobDate){
               dispatched.today[item.chemical] = parseInt(dispatched.today[item.chemical]) + parseInt(item.amount)
               dispatched.today.total = parseInt(dispatched.today.total) + parseInt(item.amount)
             }
@@ -161,8 +161,12 @@ export default function Chemicals() {
     // console.log(deliveryForChart);
   }, []); //deliveryForChart
 
-
+  if(Object.keys(dispatchForChart).length === 0 &&
+  dispatchForChart.constructor === Object){
+    return<div className="loading">Loading...</div>
+  }
 console.log(deliveredByTypes)
+console.log(dispatchedByTypes)
   return (
     <>
       <div>
@@ -180,12 +184,9 @@ console.log(deliveredByTypes)
                 </option>
               ))}
             </select>
-            {Object.keys(deliveryForChart).length === 0 &&
-            deliveryForChart.constructor === Object ? (
-              <p>Loading</p>
-            ) : (
+           
               <ChartChemicalsDelivered {...deliveryForChart} />
-            )}
+      
           </div>
           <div className="dispatch-container">
             <h2>Dispatched</h2>
@@ -199,12 +200,8 @@ console.log(deliveredByTypes)
                 </option>
               ))}
             </select>
-            {Object.keys(dispatchForChart).length === 0 &&
-            dispatchForChart.constructor === Object ? (
-              <p>Loading</p>
-            ) : (
               <ChartChemicalsDispatched {...dispatchForChart} />
-            )}
+            
           </div>
         </div>
       </div>
