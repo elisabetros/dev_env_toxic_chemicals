@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 // import { Tabs, useTabState, usePanelState } from "@bumaga/tabs";
 import { Tabs, Tab, Content } from "./TabStyle";
 import "../css/sites.css";
-import Datepicker from "./datePicker/DatePicker";
 import Accordion from "./Accordion";
 import * as moment from "moment";
 import axios from 'axios'
@@ -23,7 +22,6 @@ export default function Search() {
   const [site2DetailedData, setSite2DetailedData] = useState()
   const [site1DetailedData, setSite1DetailedData] = useState();
 
-  const [searchDates, setSearchDates] = useState();
   const [site1ForDisplay, setSite1ForDisplay] = useState()
   const [site2ForDisplay, setSite2ForDisplay] = useState()
 
@@ -108,13 +106,8 @@ export default function Search() {
   }
 
 
-  function handleSearchDates(value) {
-    console.log(value);
-    setSearchDates(value);
-  }
 
   const clearFilters = () => {
-    setSearchDates(null)
     ref.current.cleanValue();
   };
 
@@ -180,60 +173,12 @@ export default function Search() {
         setSite2DataTotal({A: site2ACounter, B:site2BCounter, C:site2CCounter})
       }
     }
-    if(!searchDates){
-      console.log('fetch')
+  
       fetchJobs()
-    }
+    
 
-    console.log(searchDates);
-    if (searchDates && searchDates.endDate && site1DetailedData && site2DetailedData) {
-      console.log(searchDates);
-      let filteredDatesSite1 = site1ForDisplay.filter((item) => {
-        if (
-          moment(item.date).isBetween(
-            moment(searchDates.startDate),
-            moment(searchDates.endDate),
-            null,
-            '[]'
-          )
-        ) {
-          // console.log('yes')
-          return true;
-        } else {
-          // console.log('no')
-          return false;
-        }
-      });
-      let filteredDatesSite2 = site2ForDisplay.filter((item) => {
-        if (
-          moment(item.date).isBetween(
-            moment(searchDates.startDate),
-            moment(searchDates.endDate),
-            null,
-            '[]'
-          )
-        ) {
-          // console.log('yes')
-          return true;
-        } else {
-          // console.log('no')
-          return false;
-        }
-      });
-      if(filteredDatesSite1.length){
-        setError('')
-        setSite1ForDisplay(filteredDatesSite1);
-      }else{
-        setError('No jobs on those days')
-      }
-      if(filteredDatesSite2.length){
-        setError('')
-        setSite2ForDisplay(filteredDatesSite2);
-      }else{
-        setError('No jobs on those days')
-      }
-    }
-  }, [searchDates]);
+   
+  }, []);
 
   //
 
@@ -276,15 +221,7 @@ export default function Search() {
             <button onClick={() => sortByJobType('dispatched', site1DetailedData)}>Show all dispatched</button>
           </div>
 
-            <div>
-              <Accordion title="Search by date">
-                <Datepicker
-                  value={searchDates}
-                  onChange={handleSearchDates}
-                  ref={ref}
-                />
-              </Accordion>
-            </div>
+            
 
             <div className="tickets">
               <div className="tableHeaders">{renderTableHeader(site1ForDisplay)}</div>
@@ -315,15 +252,7 @@ export default function Search() {
             <button onClick={() => sortByJobType('dispatched', site2DetailedData)}>Show all dispatched</button>
           </div>
 
-            <div>
-              <Accordion title="Search by date">
-                <Datepicker
-                  value={searchDates}
-                  onChange={handleSearchDates}
-                  ref={ref}
-                />
-              </Accordion>
-            </div>
+           
 
             <div>
             <div className="tableHeaders">{renderTableHeader(site2ForDisplay)}</div>

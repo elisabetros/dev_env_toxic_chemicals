@@ -8,7 +8,7 @@ const Warehouse = require('./warehouse')
 const Ticket = require('./ticket')
 
 test('expect site to exist', () => {
-    // const site = new Site()
+    const site = new Site()
     expect(site).toBeTruthy()
 })
 
